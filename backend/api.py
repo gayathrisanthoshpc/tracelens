@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 import os
 
 from models.schemas import CaseAnalysis
@@ -21,11 +22,26 @@ app = FastAPI(
 )
 
 
+# Allow React frontend to connect
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 @app.get("/")
 def home():
+
     return {
         "message": "TraceLens API running"
     }
+
 
 
 @app.post("/upload/{case_id}")
@@ -38,10 +54,14 @@ async def upload_evidence(
 
     os.makedirs(folder, exist_ok=True)
 
+
     file_path = f"{folder}/{file.filename}"
 
+
     with open(file_path, "wb") as buffer:
+
         buffer.write(await file.read())
+
 
     return {
         "message": "Evidence uploaded successfully",
@@ -50,22 +70,29 @@ async def upload_evidence(
     }
 
 
+
+
 @app.get("/analyze/{case_id}", response_model=CaseAnalysis)
 def analyze_case(case_id: str):
 
     folder = f"data/{case_id}"
 
+
     if not os.path.exists(folder):
+
         return {
             "case_id": case_id,
             "people": [],
             "events": []
         }
+
 
 
     files = os.listdir(folder)
 
+
     if len(files) == 0:
+
         return {
             "case_id": case_id,
             "people": [],
@@ -73,42 +100,71 @@ def analyze_case(case_id: str):
         }
 
 
+
     file_path = f"{folder}/{files[0]}"
+
 
     evidence = read_evidence(file_path)
 
 
+
     result = {
+
         "case_id": case_id,
+
         "people": extract_people(evidence),
+
         "events": extract_timeline(evidence)
+
     }
+
 
 
     save_memory(result)
 
+
     return result
+
+
+
+
+
 @app.get("/memory")
 def memory():
 
     cases = get_memory()
 
+
     return {
+
         "total_cases": len(cases),
+
         "cases": cases
+
     }
+
+
+
+
+
 @app.get("/cases")
 def get_cases():
 
     cases = get_memory()
 
+
     return {
+
         "total_cases": len(cases),
+
         "cases": [
             case["case_id"]
             for case in cases
         ]
+
     }
+
+
 
 
 
@@ -117,12 +173,17 @@ def get_case(case_id: str):
 
     cases = get_memory()
 
+
     for case in cases:
 
         if case["case_id"] == case_id:
+
             return case
 
 
+
     return {
+
         "message": "Case not found"
+
     }
