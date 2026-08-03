@@ -3,39 +3,6 @@
         {
             "case_id": "case_001",
             "people": [
-                "Rahul",
-                "Arjun"
-            ],
-            "events": [
-                "Rahul contacted Arjun",
-                "Arjun sent a document",
-                "Rahul confirmed payment"
-            ]
-        },
-        {
-            "case_id": "case_001",
-            "people": [
-                "Rahul",
-                "Arjun"
-            ],
-            "events": [
-                {
-                    "time": "10:30",
-                    "event": "Rahul contacted Arjun."
-                },
-                {
-                    "time": "10:45",
-                    "event": "Arjun sent a document."
-                },
-                {
-                    "time": "11:00",
-                    "event": "Rahul confirmed payment."
-                }
-            ]
-        },
-        {
-            "case_id": "case_001",
-            "people": [
                 "Arjun",
                 "Rahul"
             ],
