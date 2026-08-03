@@ -4,6 +4,7 @@ import axios from "axios";
 
 import RelationshipGraph from "../components/RelationshipGraph";
 import AgentStatus from "../components/AgentStatus";
+import ReportCard from "../components/ReportCard";
 
 
 function CaseDetails() {
@@ -11,11 +12,13 @@ function CaseDetails() {
 
   const { caseId } = useParams();
 
+
   const [data, setData] = useState(null);
 
 
 
   useEffect(() => {
+
 
     axios
       .get(`http://127.0.0.1:8000/cases/${caseId}`)
@@ -32,6 +35,7 @@ function CaseDetails() {
 
 
   }, [caseId]);
+
 
 
 
@@ -53,14 +57,20 @@ function CaseDetails() {
 
 
 
+
   return (
 
     <div className="min-h-screen bg-gray-950 text-white p-8">
 
 
+
       <h1 className="text-4xl font-bold">
+
         {data.case_id}
+
       </h1>
+
+
 
 
 
@@ -70,7 +80,9 @@ function CaseDetails() {
 
 
         <h2 className="text-2xl font-semibold mb-5">
+
           Investigation Process
+
         </h2>
 
 
@@ -83,14 +95,27 @@ function CaseDetails() {
 
 
 
+      {/* Report */}
+
+      <ReportCard report={data.report} />
+
+
+
+
+
+
+
       {/* People */}
 
       <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold">
+
           People
+
         </h2>
+
 
 
         <div className="flex gap-3 mt-4">
@@ -100,8 +125,11 @@ function CaseDetails() {
             data.people.map((person) => (
 
               <div
+
                 key={person}
+
                 className="bg-gray-900 px-5 py-3 rounded-xl"
+
               >
 
                 {person}
@@ -122,14 +150,19 @@ function CaseDetails() {
 
 
 
+
+
       {/* Timeline */}
 
       <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold">
+
           Timeline
+
         </h2>
+
 
 
         <div className="mt-5 space-y-4">
@@ -139,17 +172,24 @@ function CaseDetails() {
             data.events.map((event, index) => (
 
               <div
+
                 key={index}
+
                 className="bg-gray-900 p-5 rounded-xl"
+
               >
 
                 <p className="text-blue-400 font-semibold">
+
                   {event.time}
+
                 </p>
 
 
                 <p className="mt-2">
+
                   {event.event}
+
                 </p>
 
 
@@ -169,14 +209,18 @@ function CaseDetails() {
 
 
 
+
       {/* Graph */}
 
       <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold mb-5">
+
           Connections
+
         </h2>
+
 
 
         <RelationshipGraph />

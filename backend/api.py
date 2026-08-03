@@ -1,8 +1,10 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-import os
 
-from models.schemas import CaseAnalysis
+import os
+import shutil
+import json
+
 
 from agents.evidence_agent import (
     read_evidence,
@@ -10,28 +12,41 @@ from agents.evidence_agent import (
     extract_timeline
 )
 
-from agents.memory_agent import (
-    save_memory,
-    get_memory
-)
+from agents.memory_agent import save_memory
+
+from agents.report_agent import generate_report
+
 
 
 app = FastAPI(
-    title="TraceLens API",
-    version="0.1.0"
+    title="TraceLens API"
 )
 
 
-# Allow React frontend to connect
+
+# CORS Configuration
+
 app.add_middleware(
+
     CORSMiddleware,
+
     allow_origins=[
         "http://localhost:5173"
     ],
+
     allow_credentials=True,
+
     allow_methods=["*"],
+
     allow_headers=["*"],
+
 )
+
+
+
+MEMORY_FILE = "memory/case_memory.json"
+
+
 
 
 
@@ -44,67 +59,16 @@ def home():
 
 
 
-@app.post("/upload/{case_id}")
-async def upload_evidence(
-    case_id: str,
-    file: UploadFile = File(...)
-):
-
-    folder = f"data/{case_id}"
-
-    os.makedirs(folder, exist_ok=True)
-
-
-    file_path = f"{folder}/{file.filename}"
-
-
-    with open(file_path, "wb") as buffer:
-
-        buffer.write(await file.read())
-
-
-    return {
-        "message": "Evidence uploaded successfully",
-        "file": file.filename,
-        "case_id": case_id
-    }
 
 
 
-
-@app.get("/analyze/{case_id}", response_model=CaseAnalysis)
+@app.get("/analyze/{case_id}")
 def analyze_case(case_id: str):
 
-    folder = f"data/{case_id}"
 
-
-    if not os.path.exists(folder):
-
-        return {
-            "case_id": case_id,
-            "people": [],
-            "events": []
-        }
-
-
-
-    files = os.listdir(folder)
-
-
-    if len(files) == 0:
-
-        return {
-            "case_id": case_id,
-            "people": [],
-            "events": []
-        }
-
-
-
-    file_path = f"{folder}/{files[0]}"
-
-
-    evidence = read_evidence(file_path)
+    evidence = read_evidence(
+        f"data/{case_id}/chat.txt"
+    )
 
 
 
@@ -120,7 +84,13 @@ def analyze_case(case_id: str):
 
 
 
+
+    result["report"] = generate_report(result)
+
+
+
     save_memory(result)
+
 
 
     return result
@@ -129,19 +99,64 @@ def analyze_case(case_id: str):
 
 
 
-@app.get("/memory")
-def memory():
 
-    cases = get_memory()
+
+@app.post("/upload/{case_id}")
+def upload_evidence(
+    case_id: str,
+    file: UploadFile = File(...)
+):
+
+
+    folder = f"data/{case_id}"
+
+
+
+    os.makedirs(
+        folder,
+        exist_ok=True
+    )
+
+
+
+    file_path = (
+        f"{folder}/{file.filename}"
+    )
+
+
+
+    with open(
+        file_path,
+        "wb"
+    ) as buffer:
+
+
+        shutil.copyfileobj(
+            file.file,
+            buffer
+        )
+
 
 
     return {
 
-        "total_cases": len(cases),
 
-        "cases": cases
+        "message":
+        "Evidence uploaded successfully",
+
+
+        "file":
+        file.filename,
+
+
+        "case_id":
+        case_id
 
     }
+
+
+
+
 
 
 
@@ -150,7 +165,39 @@ def memory():
 @app.get("/cases")
 def get_cases():
 
-    cases = get_memory()
+
+    if not os.path.exists(MEMORY_FILE):
+
+        return {
+
+            "total_cases": 0,
+
+            "cases": []
+
+        }
+
+
+
+    with open(
+        MEMORY_FILE,
+        "r"
+    ) as file:
+
+        data = json.load(file)
+
+
+
+
+    if isinstance(data, dict) and "cases" in data:
+
+        cases = data["cases"]
+
+    else:
+
+        cases = data
+
+
+
 
 
     return {
@@ -158,8 +205,11 @@ def get_cases():
         "total_cases": len(cases),
 
         "cases": [
+
             case["case_id"]
+
             for case in cases
+
         ]
 
     }
@@ -168,22 +218,79 @@ def get_cases():
 
 
 
+
+
+
+
 @app.get("/cases/{case_id}")
 def get_case(case_id: str):
 
-    cases = get_memory()
+
+
+    if not os.path.exists(MEMORY_FILE):
+
+        return {
+
+            "error": "No cases found"
+
+        }
+
+
+
+
+
+    with open(
+        MEMORY_FILE,
+        "r"
+    ) as file:
+
+        data = json.load(file)
+
+
+
+
+
+
+    # Current memory format:
+    #
+    # {
+    #   "cases":[]
+    # }
+
+
+    if isinstance(data, dict) and "cases" in data:
+
+        cases = data["cases"]
+
+    else:
+
+        cases = data
+
+
+
 
 
     for case in cases:
 
+
         if case["case_id"] == case_id:
+
+
+
+            case["report"] = generate_report(case)
+
+
 
             return case
 
 
 
+
+
+
     return {
 
-        "message": "Case not found"
+        "error":
+        "Case not found"
 
     }
