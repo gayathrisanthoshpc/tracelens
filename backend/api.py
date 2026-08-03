@@ -97,3 +97,32 @@ def memory():
         "total_cases": len(cases),
         "cases": cases
     }
+@app.get("/cases")
+def get_cases():
+
+    cases = get_memory()
+
+    return {
+        "total_cases": len(cases),
+        "cases": [
+            case["case_id"]
+            for case in cases
+        ]
+    }
+
+
+
+@app.get("/cases/{case_id}")
+def get_case(case_id: str):
+
+    cases = get_memory()
+
+    for case in cases:
+
+        if case["case_id"] == case_id:
+            return case
+
+
+    return {
+        "message": "Case not found"
+    }
