@@ -12,21 +12,9 @@ def save_memory(case_data, file_path="memory/case_memory.json"):
         json.dump(memory, file, indent=4)
 
 
-if __name__ == "__main__":
+def get_memory(file_path="memory/case_memory.json"):
 
-    case = {
-        "case_id": "case_001",
-        "people": [
-            "Rahul",
-            "Arjun"
-        ],
-        "events": [
-            "Rahul contacted Arjun",
-            "Arjun sent a document",
-            "Rahul confirmed payment"
-        ]
-    }
+    with open(file_path, "r") as file:
+        memory = json.load(file)
 
-    save_memory(case)
-
-    print("Memory saved successfully")
+    return memory["cases"]

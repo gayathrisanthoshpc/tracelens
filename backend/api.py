@@ -9,7 +9,10 @@ from agents.evidence_agent import (
     extract_timeline
 )
 
-from agents.memory_agent import save_memory
+from agents.memory_agent import (
+    save_memory,
+    get_memory
+)
 
 
 app = FastAPI(
@@ -52,7 +55,6 @@ def analyze_case(case_id: str):
 
     folder = f"data/{case_id}"
 
-    # Check if case folder exists
     if not os.path.exists(folder):
         return {
             "case_id": case_id,
@@ -60,7 +62,7 @@ def analyze_case(case_id: str):
             "events": []
         }
 
-    # Find uploaded evidence file
+
     files = os.listdir(folder)
 
     if len(files) == 0:
@@ -70,9 +72,11 @@ def analyze_case(case_id: str):
             "events": []
         }
 
+
     file_path = f"{folder}/{files[0]}"
 
     evidence = read_evidence(file_path)
+
 
     result = {
         "case_id": case_id,
@@ -80,6 +84,16 @@ def analyze_case(case_id: str):
         "events": extract_timeline(evidence)
     }
 
+
     save_memory(result)
 
     return result
+@app.get("/memory")
+def memory():
+
+    cases = get_memory()
+
+    return {
+        "total_cases": len(cases),
+        "cases": cases
+    }
