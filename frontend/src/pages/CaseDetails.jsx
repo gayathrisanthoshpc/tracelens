@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import RelationshipGraph from "../components/RelationshipGraph";
+import AgentStatus from "../components/AgentStatus";
 
 
 function CaseDetails() {
@@ -51,16 +52,34 @@ function CaseDetails() {
 
 
 
+
   return (
 
     <div className="min-h-screen bg-gray-950 text-white p-8">
 
 
       <h1 className="text-4xl font-bold">
-
         {data.case_id}
-
       </h1>
+
+
+
+      {/* Agent Workflow */}
+
+      <section className="mt-10">
+
+
+        <h2 className="text-2xl font-semibold mb-5">
+          Investigation Process
+        </h2>
+
+
+        <AgentStatus />
+
+
+      </section>
+
+
 
 
 
@@ -70,18 +89,15 @@ function CaseDetails() {
 
 
         <h2 className="text-2xl font-semibold">
-
           People
-
         </h2>
-
 
 
         <div className="flex gap-3 mt-4">
 
 
           {
-            data.people.map((person)=>(
+            data.people.map((person) => (
 
               <div
                 key={person}
@@ -105,25 +121,22 @@ function CaseDetails() {
 
 
 
+
       {/* Timeline */}
 
       <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold">
-
           Timeline
-
         </h2>
-
 
 
         <div className="mt-5 space-y-4">
 
 
           {
-            data.events.map((event,index)=>(
-
+            data.events.map((event, index) => (
 
               <div
                 key={index}
@@ -131,21 +144,16 @@ function CaseDetails() {
               >
 
                 <p className="text-blue-400 font-semibold">
-
                   {event.time}
-
                 </p>
 
 
                 <p className="mt-2">
-
                   {event.event}
-
                 </p>
 
 
               </div>
-
 
             ))
           }
@@ -160,17 +168,15 @@ function CaseDetails() {
 
 
 
-      {/* Relationship Graph */}
+
+      {/* Graph */}
 
       <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold mb-5">
-
           Connections
-
         </h2>
-
 
 
         <RelationshipGraph />
