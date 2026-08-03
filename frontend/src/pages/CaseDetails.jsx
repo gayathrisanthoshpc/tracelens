@@ -2,8 +2,11 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import RelationshipGraph from "../components/RelationshipGraph";
+
 
 function CaseDetails() {
+
 
   const { caseId } = useParams();
 
@@ -15,9 +18,14 @@ function CaseDetails() {
 
     axios
       .get(`http://127.0.0.1:8000/cases/${caseId}`)
-      .then((response)=>{
+      .then((response) => {
 
         setData(response.data);
+
+      })
+      .catch((error) => {
+
+        console.log(error);
 
       });
 
@@ -26,12 +34,17 @@ function CaseDetails() {
 
 
 
-  if(!data){
+
+  if (!data) {
 
     return (
-      <div className="text-white p-8">
+
+      <div className="min-h-screen bg-gray-950 text-white p-8">
+
         Loading investigation...
+
       </div>
+
     );
 
   }
@@ -44,79 +57,127 @@ function CaseDetails() {
 
 
       <h1 className="text-4xl font-bold">
+
         {data.case_id}
+
       </h1>
 
 
-      <div className="mt-8">
+
+      {/* People */}
+
+      <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold">
+
           People
+
         </h2>
 
 
-        <div className="flex gap-3 mt-3">
+
+        <div className="flex gap-3 mt-4">
+
 
           {
             data.people.map((person)=>(
 
-              <span
+              <div
                 key={person}
-                className="bg-gray-900 px-4 py-2 rounded-lg"
+                className="bg-gray-900 px-5 py-3 rounded-xl"
               >
+
                 {person}
-              </span>
+
+              </div>
 
             ))
           }
 
+
         </div>
 
 
-      </div>
+      </section>
 
 
 
 
-      <div className="mt-10">
+
+      {/* Timeline */}
+
+      <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold">
+
           Timeline
+
         </h2>
 
 
-        <div className="mt-4 space-y-4">
+
+        <div className="mt-5 space-y-4">
 
 
-        {
-          data.events.map((event,index)=>(
-
-            <div
-              key={index}
-              className="bg-gray-900 p-4 rounded-xl"
-            >
-
-              <p className="text-blue-400">
-                {event.time}
-              </p>
-
-              <p>
-                {event.event}
-              </p>
+          {
+            data.events.map((event,index)=>(
 
 
-            </div>
+              <div
+                key={index}
+                className="bg-gray-900 p-5 rounded-xl"
+              >
 
-          ))
-        }
+                <p className="text-blue-400 font-semibold">
+
+                  {event.time}
+
+                </p>
+
+
+                <p className="mt-2">
+
+                  {event.event}
+
+                </p>
+
+
+              </div>
+
+
+            ))
+          }
 
 
         </div>
 
 
-      </div>
+      </section>
+
+
+
+
+
+      {/* Relationship Graph */}
+
+      <section className="mt-10">
+
+
+        <h2 className="text-2xl font-semibold mb-5">
+
+          Connections
+
+        </h2>
+
+
+
+        <RelationshipGraph />
+
+
+      </section>
+
 
 
     </div>
