@@ -1,0 +1,16 @@
+{
+    "cases": [
+        {
+            "case_id": "case_001",
+            "people": [
+                "Rahul",
+                "Arjun"
+            ],
+            "events": [
+                "Rahul contacted Arjun",
+                "Arjun sent a document",
+                "Rahul confirmed payment"
+            ]
+        }
+    ]
+}
