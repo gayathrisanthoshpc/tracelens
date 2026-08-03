@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from models.schemas import CaseAnalysis
+
 from agents.evidence_agent import (
     read_evidence,
     extract_people,
@@ -20,9 +22,9 @@ def home():
         "message": "TraceLens API running"
     }
 
-
-@app.get("/analyze/{case_id}")
+@app.get("/analyze/{case_id}", response_model=CaseAnalysis)
 def analyze_case(case_id: str):
+
 
     evidence = read_evidence(
         f"data/{case_id}/chat.txt"
