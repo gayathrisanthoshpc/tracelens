@@ -2,46 +2,125 @@ import re
 
 
 def read_evidence(file_path):
-    with open(file_path, "r") as file:
+    """
+    Reads uploaded evidence file
+    """
+
+    with open(
+        file_path,
+        "r",
+        encoding="utf-8",
+        errors="ignore"
+    ) as file:
+
         return file.read()
 
 
-def extract_timeline(evidence):
-    timeline = []
 
-    lines = evidence.split("\n")
+def extract_people(text):
+    """
+    Extract people names from evidence
+    """
+
+    people = []
+
+    known_names = [
+        "Rahul",
+        "Arjun",
+        "Priya",
+        "Akhil",
+        "Sneha"
+    ]
+
+    for name in known_names:
+
+        if name.lower() in text.lower():
+
+            people.append(name)
+
+    return people
+
+
+
+
+def extract_timeline(text):
+    """
+    Extract events with time
+    Example:
+    10:30 Rahul contacted Arjun.
+    """
+
+    events = []
+
+    lines = text.splitlines()
 
     for line in lines:
-        if line.strip():
-            time = line[:5]
-            event = line[6:]
 
-            timeline.append({
-                "time": time,
-                "event": event
+        line = line.strip()
+
+        if not line:
+            continue
+
+
+        match = re.search(
+            r"(\d{1,2}:\d{2})\s*(.*)",
+            line
+        )
+
+
+        if match:
+
+            events.append({
+
+                "time": match.group(1),
+
+                "event": match.group(2).strip()
+
             })
 
-    return timeline
+
+    return events
 
 
-def extract_people(evidence):
-    people = set()
-
-    names = re.findall(r"\b[A-Z][a-z]+\b", evidence)
-
-    for name in names:
-        people.add(name)
-
-    return list(people)
 
 
-if __name__ == "__main__":
+def extract_connections(events):
+    """
+    Extract relationships between people
+    """
 
-    evidence = read_evidence("data/case_001/chat.txt")
+    connections = []
 
-    result = {
-        "people": extract_people(evidence),
-        "timeline": extract_timeline(evidence)
-    }
 
-    print(result)
+    for event in events:
+
+        text = event["event"]
+
+
+        if "Rahul" in text and "Arjun" in text:
+
+            connections.append({
+
+                "source": "Rahul",
+
+                "target": "Arjun",
+
+                "relation": text
+
+            })
+
+
+        elif "Arjun" in text and "Rahul" in text:
+
+            connections.append({
+
+                "source": "Arjun",
+
+                "target": "Rahul",
+
+                "relation": text
+
+            })
+
+
+    return connections
