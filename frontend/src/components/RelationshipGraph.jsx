@@ -1,3 +1,4 @@
+import React from "react";
 import ReactFlow, {
   Background,
   Controls
@@ -6,27 +7,54 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 
+
 function RelationshipGraph({ connections = [] }) {
 
 
+
   const nodes = [];
+
+  const edges = [];
+
 
 
   const people = new Set();
 
 
 
-  connections.forEach((connection) => {
+
+  connections.forEach((connection, index) => {
+
 
     people.add(connection.source);
 
     people.add(connection.target);
 
+
+
+    edges.push({
+
+      id: `edge-${index}`,
+
+      source: connection.source,
+
+      target: connection.target,
+
+      label: connection.relation
+
+
+    });
+
+
   });
 
 
 
-  Array.from(people).forEach((person, index) => {
+
+
+
+  Array.from(people).forEach((person, index)=>{
+
 
     nodes.push({
 
@@ -34,7 +62,7 @@ function RelationshipGraph({ connections = [] }) {
 
       position: {
 
-        x: index * 250 + 50,
+        x: index * 250,
 
         y: 120
 
@@ -46,7 +74,9 @@ function RelationshipGraph({ connections = [] }) {
 
       }
 
+
     });
+
 
   });
 
@@ -54,62 +84,74 @@ function RelationshipGraph({ connections = [] }) {
 
 
 
-  const edges = connections.map((connection, index) => ({
-
-    id: `edge-${index}`,
-
-    source: connection.source,
-
-    target: connection.target,
-
-    label: connection.relation
-
-
-  }));
-
-
-
 
 
   return (
 
+
     <div
+
+      className="bg-gray-900 rounded-xl border border-gray-800"
 
       style={{
 
-        height: 350,
+        height:400,
 
-        width: "100%"
+        width:"100%"
 
       }}
 
-      className="bg-gray-900 rounded-xl"
-
     >
 
-      <ReactFlow
 
-        nodes={nodes}
 
-        edges={edges}
+      {
 
-        fitView
+        connections.length > 0 ? (
 
-      >
 
-        <Background />
+          <ReactFlow
 
-        <Controls />
+            nodes={nodes}
 
-      </ReactFlow>
+            edges={edges}
+
+            fitView
+
+          >
+
+
+            <Background/>
+
+            <Controls/>
+
+
+          </ReactFlow>
+
+
+        ) : (
+
+
+          <div className="h-full flex items-center justify-center text-gray-400">
+
+            No connections detected
+
+          </div>
+
+
+        )
+
+      }
+
 
 
     </div>
 
+
   );
 
-}
 
+}
 
 
 export default RelationshipGraph;
