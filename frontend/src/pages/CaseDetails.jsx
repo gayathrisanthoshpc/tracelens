@@ -12,7 +12,6 @@ function CaseDetails() {
 
   const { caseId } = useParams();
 
-
   const [data, setData] = useState(null);
 
 
@@ -21,7 +20,7 @@ function CaseDetails() {
 
 
     axios
-      .get(`http://127.0.0.1:8000/cases/${caseId}`)
+      .get(`http://127.0.0.1:8000/analyze/${caseId}`)
       .then((response) => {
 
         setData(response.data);
@@ -66,7 +65,7 @@ function CaseDetails() {
 
       <h1 className="text-4xl font-bold">
 
-        {data.case_id}
+        Investigation: {data.case_id}
 
       </h1>
 
@@ -95,9 +94,28 @@ function CaseDetails() {
 
 
 
+
+
+
+
       {/* Report */}
 
-      <ReportCard report={data.report} />
+      <section className="mt-10">
+
+
+        <h2 className="text-2xl font-semibold mb-5">
+
+          AI Report
+
+        </h2>
+
+
+        <ReportCard report={data.report} />
+
+
+      </section>
+
+
 
 
 
@@ -112,38 +130,37 @@ function CaseDetails() {
 
         <h2 className="text-2xl font-semibold">
 
-          People
+          Identified People
 
         </h2>
 
 
 
-        <div className="flex gap-3 mt-4">
+        <div className="flex gap-4 mt-5 flex-wrap">
 
 
-          {
-            data.people.map((person) => (
+          {data.people.map((person) => (
 
-              <div
+            <div
 
-                key={person}
+              key={person}
 
-                className="bg-gray-900 px-5 py-3 rounded-xl"
+              className="bg-gray-900 border border-gray-700 px-6 py-3 rounded-xl"
 
-              >
+            >
 
-                {person}
+              {person}
 
-              </div>
+            </div>
 
-            ))
-          }
+          ))}
 
 
         </div>
 
 
       </section>
+
 
 
 
@@ -168,35 +185,35 @@ function CaseDetails() {
         <div className="mt-5 space-y-4">
 
 
-          {
-            data.events.map((event, index) => (
+          {data.events.map((event, index) => (
 
-              <div
+            <div
 
-                key={index}
+              key={index}
 
-                className="bg-gray-900 p-5 rounded-xl"
+              className="bg-gray-900 border border-gray-700 p-5 rounded-xl"
 
-              >
-
-                <p className="text-blue-400 font-semibold">
-
-                  {event.time}
-
-                </p>
+            >
 
 
-                <p className="mt-2">
+              <p className="text-blue-400 font-semibold text-lg">
 
-                  {event.event}
+                {event.time}
 
-                </p>
+              </p>
 
 
-              </div>
 
-            ))
-          }
+              <p className="mt-2">
+
+                {event.event}
+
+              </p>
+
+
+            </div>
+
+          ))}
 
 
         </div>
@@ -210,23 +227,32 @@ function CaseDetails() {
 
 
 
-      {/* Graph */}
+
+
+      {/* Connection Graph */}
 
       <section className="mt-10">
 
 
         <h2 className="text-2xl font-semibold mb-5">
 
-          Connections
+          Relationship Graph
 
         </h2>
 
 
 
-        <RelationshipGraph />
+        <RelationshipGraph
+
+          connections={data.connections}
+
+        />
 
 
       </section>
+
+
+
 
 
 
@@ -235,6 +261,7 @@ function CaseDetails() {
   );
 
 }
+
 
 
 export default CaseDetails;
