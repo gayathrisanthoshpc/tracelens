@@ -8,11 +8,29 @@ function UploadEvidence() {
 
   const [file, setFile] = useState(null);
 
-  const [caseId, setCaseId] = useState("case_002");
+  const [caseId] = useState("case_002");
 
   const [loading, setLoading] = useState(false);
 
+  const [step, setStep] = useState(0);
+
   const navigate = useNavigate();
+
+
+
+
+  const agents = [
+
+    "🔍 Evidence Agent - Processing evidence",
+
+    "👤 Entity Agent - Extracting people",
+
+    "🕒 Timeline Agent - Reconstructing events",
+
+    "📄 Report Agent - Generating report"
+
+  ];
+
 
 
 
@@ -45,6 +63,30 @@ function UploadEvidence() {
 
 
 
+    const timer = setInterval(() => {
+
+
+      setStep((current) => {
+
+
+        if (current < agents.length - 1) {
+
+          return current + 1;
+
+        }
+
+
+        return current;
+
+
+      });
+
+
+    }, 1200);
+
+
+
+
 
 
     try {
@@ -70,6 +112,10 @@ function UploadEvidence() {
 
 
 
+      clearInterval(timer);
+
+
+
       navigate(
 
         `/case/${caseId}`
@@ -80,17 +126,14 @@ function UploadEvidence() {
 
     }
 
+
     catch(error){
 
 
       console.log(error);
 
 
-      alert(
-
-        "Upload failed"
-
-      );
+      alert("Upload failed");
 
 
     }
@@ -98,6 +141,8 @@ function UploadEvidence() {
 
     finally {
 
+
+      clearInterval(timer);
 
       setLoading(false);
 
@@ -114,11 +159,115 @@ function UploadEvidence() {
 
 
 
+  if (loading) {
+
+
+    return (
+
+      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+
+
+        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-10 w-full max-w-xl">
+
+
+          <h1 className="text-4xl font-bold text-center">
+
+            TraceLens AI
+
+          </h1>
+
+
+
+          <p className="text-gray-400 text-center mt-3">
+
+            Running investigation workflow...
+
+          </p>
+
+
+
+
+
+          <div className="mt-8 space-y-4">
+
+
+            {
+
+              agents.map((agent, index) => (
+
+
+                <div
+
+                  key={agent}
+
+                  className={`p-4 rounded-xl border transition
+
+                  ${
+                    index <= step
+                    ? "bg-gray-800 border-blue-500"
+                    : "bg-gray-900 border-gray-800"
+                  }
+
+                  `}
+
+                >
+
+
+                  <span>
+
+                    {
+
+                      index < step
+
+                      ? "✓ "
+
+                      : index === step
+
+                      ? "⟳ "
+
+                      : "○ "
+
+                    }
+
+
+                    {agent}
+
+                  </span>
+
+
+
+                </div>
+
+
+              ))
+
+            }
+
+
+          </div>
+
+
+
+        </div>
+
+
+      </div>
+
+    );
+
+
+  }
+
+
+
+
+
+
+
   return (
 
 
     <div className="min-h-screen bg-gray-950 text-white p-10">
-
 
 
       <div className="max-w-4xl mx-auto">
@@ -144,9 +293,7 @@ function UploadEvidence() {
 
 
 
-
         <div className="mt-12 bg-gray-900 border border-gray-800 rounded-2xl p-10 max-w-xl">
-
 
 
           <h2 className="text-2xl font-semibold">
@@ -157,13 +304,11 @@ function UploadEvidence() {
 
 
 
-
           <p className="text-gray-400 mt-2">
 
             Upload evidence and let AI agents investigate the case.
 
           </p>
-
 
 
 
@@ -183,25 +328,17 @@ function UploadEvidence() {
 
             <input
 
-
               type="file"
-
 
               className="mt-5 block w-full text-sm text-gray-400"
 
-
               onChange={(e)=>
-
 
                 setFile(e.target.files[0])
 
-
               }
 
-
             />
-
-
 
 
           </div>
@@ -211,11 +348,9 @@ function UploadEvidence() {
 
 
 
-
           {
 
             file && (
-
 
               <div className="mt-5 bg-gray-800 rounded-lg p-4">
 
@@ -236,12 +371,9 @@ function UploadEvidence() {
 
               </div>
 
-
             )
 
           }
-
-
 
 
 
@@ -253,27 +385,12 @@ function UploadEvidence() {
 
             onClick={uploadFile}
 
-
-            disabled={loading}
-
-
             className="mt-8 w-full bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold transition"
 
 
           >
 
-
-
-            {
-
-              loading
-
-              ? "Analyzing Evidence..."
-
-              : "Start Investigation"
-
-            }
-
+            Start Investigation
 
 
           </button>
@@ -285,9 +402,7 @@ function UploadEvidence() {
         </div>
 
 
-
       </div>
-
 
 
     </div>
@@ -296,7 +411,6 @@ function UploadEvidence() {
   );
 
 }
-
 
 
 export default UploadEvidence;
