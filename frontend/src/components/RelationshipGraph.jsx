@@ -6,57 +6,95 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 
-function RelationshipGraph() {
+function RelationshipGraph({ connections = [] }) {
 
-  const nodes = [
-    {
-      id: "1",
+
+  const nodes = [];
+
+
+  const people = new Set();
+
+
+
+  connections.forEach((connection) => {
+
+    people.add(connection.source);
+
+    people.add(connection.target);
+
+  });
+
+
+
+  Array.from(people).forEach((person, index) => {
+
+    nodes.push({
+
+      id: person,
+
       position: {
-        x: 50,
-        y: 100
+
+        x: index * 250 + 50,
+
+        y: 120
+
       },
+
       data: {
-        label: "Rahul"
+
+        label: person
+
       }
-    },
 
-    {
-      id: "2",
-      position: {
-        x: 300,
-        y: 100
-      },
-      data: {
-        label: "Arjun"
-      }
-    }
-  ];
+    });
+
+  });
 
 
-  const edges = [
-    {
-      id: "e1-2",
-      source: "1",
-      target: "2",
-      label: "contacted"
-    }
-  ];
+
+
+
+  const edges = connections.map((connection, index) => ({
+
+    id: `edge-${index}`,
+
+    source: connection.source,
+
+    target: connection.target,
+
+    label: connection.relation
+
+
+  }));
+
+
+
 
 
   return (
 
     <div
+
       style={{
-        height: 300,
+
+        height: 350,
+
         width: "100%"
+
       }}
+
       className="bg-gray-900 rounded-xl"
+
     >
 
       <ReactFlow
+
         nodes={nodes}
+
         edges={edges}
+
         fitView
+
       >
 
         <Background />
@@ -71,6 +109,7 @@ function RelationshipGraph() {
   );
 
 }
+
 
 
 export default RelationshipGraph;
