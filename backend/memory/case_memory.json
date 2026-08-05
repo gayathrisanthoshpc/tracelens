@@ -1,7 +1,7 @@
 {
     "cases": [
         {
-            "case_id": "case_001",
+            "case_id": "case_002",
             "people": [
                 "Arjun",
                 "Rahul"
@@ -19,45 +19,25 @@
                     "time": "11:00",
                     "event": "Rahul confirmed payment."
                 }
-            ]
-        },
-        {
-            "case_id": "case_002",
-            "people": [
-                "Rahul",
-                "Arjun"
-            ],
-            "timeline": [
-                {
-                    "time": "10:30",
-                    "event": "Rahul contacted Arjun."
-                },
-                {
-                    "time": "10:45",
-                    "event": "Arjun sent a document."
-                },
-                {
-                    "time": "11:00",
-                    "event": "Rahul confirmed payment."
-                }
             ],
             "connections": [
                 {
-                    "source": "Rahul",
-                    "target": "Arjun",
+                    "source": "Arjun",
+                    "target": "Rahul",
                     "relation": "Rahul contacted Arjun."
                 }
             ],
             "report": {
                 "risk": "Medium",
                 "confidence": 90,
-                "summary": "Rahul, Arjun were involved in the analyzed evidence.",
+                "summary": "Arjun, Rahul were involved in the analyzed evidence.",
                 "findings": [
                     "Direct communication detected",
                     "Document exchange observed",
                     "Payment confirmation found"
                 ]
-            }
+            },
+            "created_at": "2026-08-05T11:38:14.144860"
         }
     ]
 }

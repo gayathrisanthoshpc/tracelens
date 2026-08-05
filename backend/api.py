@@ -9,6 +9,8 @@ import json
 
 from agents.orchestrator import run_pipeline
 
+from models.schemas import CaseAnalysis
+
 
 
 app = FastAPI(
@@ -39,6 +41,8 @@ MEMORY_FILE = "memory/case_memory.json"
 
 
 
+
+
 @app.get("/")
 def home():
 
@@ -47,6 +51,9 @@ def home():
         "message": "TraceLens API running"
 
     }
+
+
+
 
 
 
@@ -61,6 +68,7 @@ def upload_evidence(
 
 ):
 
+
     folder = f"data/{case_id}"
 
 
@@ -68,6 +76,7 @@ def upload_evidence(
         folder,
         exist_ok=True
     )
+
 
 
     file_path = os.path.join(
@@ -79,6 +88,7 @@ def upload_evidence(
     )
 
 
+
     with open(
 
         file_path,
@@ -87,6 +97,7 @@ def upload_evidence(
 
     ) as buffer:
 
+
         shutil.copyfileobj(
 
             file.file,
@@ -94,6 +105,7 @@ def upload_evidence(
             buffer
 
         )
+
 
 
     return {
@@ -105,6 +117,10 @@ def upload_evidence(
         "case_id": case_id
 
     }
+
+
+
+
 
 
 
@@ -153,6 +169,9 @@ def analyze_case(case_id: str):
 
 
 
+
+
+
 @app.get("/cases")
 def get_cases():
 
@@ -177,23 +196,23 @@ def get_cases():
 
     ) as file:
 
+
         data = json.load(file)
 
 
 
-    if isinstance(data, dict) and "cases" in data:
 
-        cases = data["cases"]
-
-    else:
-
-        cases = data
+    cases = data.get(
+        "cases",
+        []
+    )
 
 
 
     return {
 
         "total_cases": len(cases),
+
 
         "cases": [
 
@@ -209,7 +228,14 @@ def get_cases():
 
 
 
-@app.get("/cases/{case_id}")
+
+
+
+
+@app.get(
+    "/cases/{case_id}",
+    response_model=CaseAnalysis
+)
 def get_case(case_id: str):
 
 
@@ -231,17 +257,19 @@ def get_case(case_id: str):
 
     ) as file:
 
+
         data = json.load(file)
 
 
 
-    if isinstance(data, dict) and "cases" in data:
+    cases = data.get(
 
-        cases = data["cases"]
+        "cases",
 
-    else:
+        []
 
-        cases = data
+    )
+
 
 
 
@@ -252,6 +280,7 @@ def get_case(case_id: str):
 
 
             return case
+
 
 
 

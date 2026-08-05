@@ -1,13 +1,10 @@
 import json
 import os
+from datetime import datetime
 
 
 
 def load_memory(file_path):
-
-    """
-    Load existing memory safely
-    """
 
     if not os.path.exists(file_path):
 
@@ -37,9 +34,6 @@ def load_memory(file_path):
 
     except json.JSONDecodeError:
 
-        print(
-            "Memory file corrupted. Creating new memory."
-        )
 
         return {
             "cases": []
@@ -51,17 +45,12 @@ def load_memory(file_path):
 
 
 def save_memory(
-
     case_data,
-
     file_path="memory/case_memory.json"
-
 ):
 
 
-    folder = os.path.dirname(
-        file_path
-    )
+    folder = os.path.dirname(file_path)
 
 
     if folder:
@@ -73,13 +62,17 @@ def save_memory(
 
 
 
+    case_data["created_at"] = datetime.now().isoformat()
+
+
+
     memory = load_memory(
         file_path
     )
 
 
 
-    case_exists = False
+    updated = False
 
 
 
@@ -91,14 +84,14 @@ def save_memory(
 
             memory["cases"][index] = case_data
 
-            case_exists = True
+            updated = True
 
             break
 
 
 
 
-    if not case_exists:
+    if not updated:
 
         memory["cases"].append(
             case_data
@@ -107,26 +100,17 @@ def save_memory(
 
 
 
-
     with open(
-
         file_path,
-
         "w",
-
         encoding="utf-8"
-
     ) as file:
 
 
         json.dump(
-
             memory,
-
             file,
-
             indent=4
-
         )
 
 
@@ -135,9 +119,7 @@ def save_memory(
 
 
 def get_memory(
-
     file_path="memory/case_memory.json"
-
 ):
 
 
@@ -147,9 +129,6 @@ def get_memory(
 
 
     return memory.get(
-
         "cases",
-
         []
-
     )

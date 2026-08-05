@@ -1,10 +1,8 @@
 print("REPORT AGENT LOADED")
 
 
+
 def calculate_risk(event_text):
-    """
-    Calculate case risk based on evidence keywords
-    """
 
     high_risk_words = [
         "fraud",
@@ -26,16 +24,21 @@ def calculate_risk(event_text):
     ]
 
 
+
     for word in high_risk_words:
 
         if word in event_text:
+
             return "High"
+
 
 
     for word in medium_risk_words:
 
         if word in event_text:
+
             return "Medium"
+
 
 
     return "Low"
@@ -45,26 +48,29 @@ def calculate_risk(event_text):
 
 
 def calculate_confidence(people, events):
-    """
-    Confidence score based on extracted information
-    """
 
     confidence = 50
 
 
     if people:
+
         confidence += 20
+
 
 
     if events:
+
         confidence += 20
 
 
+
     if len(events) > 3:
+
         confidence += 10
 
 
-    return min(confidence, 95)
+
+    return min(confidence,95)
 
 
 
@@ -82,7 +88,7 @@ def generate_report(case_data):
 
     events = case_data.get(
         "events",
-        case_data.get("timeline", [])
+        []
     )
 
 
@@ -94,22 +100,20 @@ def generate_report(case_data):
     event_text = " ".join(
 
         [
-            e.get("event", "")
+            e.get("event","")
             for e in events
-            if isinstance(e, dict)
         ]
 
     ).lower()
 
 
 
-    # Findings extraction
-
     if "contact" in event_text:
 
         findings.append(
             "Direct communication detected"
         )
+
 
 
     if "document" in event_text:
@@ -119,6 +123,7 @@ def generate_report(case_data):
         )
 
 
+
     if "payment" in event_text:
 
         findings.append(
@@ -126,7 +131,8 @@ def generate_report(case_data):
         )
 
 
-    if "fraud" in event_text or "scam" in event_text:
+
+    if "fraud" in event_text:
 
         findings.append(
             "Potential fraudulent activity detected"
@@ -142,41 +148,24 @@ def generate_report(case_data):
 
 
 
-    risk = calculate_risk(
-        event_text
-    )
-
-
-    confidence = calculate_confidence(
-        people,
-        events
-    )
-
-
-
-    if people:
-
-        summary = (
-            f"{', '.join(people)} were involved "
-            "in the analyzed evidence."
-        )
-
-    else:
-
-        summary = (
-            "No identifiable individuals were found "
-            "in the analyzed evidence."
-        )
-
-
-
     return {
 
-        "risk": risk,
 
-        "confidence": confidence,
+        "risk": calculate_risk(event_text),
 
-        "summary": summary,
+
+        "confidence": calculate_confidence(
+            people,
+            events
+        ),
+
+
+        "summary":
+            f"{', '.join(people)} were involved in the analyzed evidence."
+            if people
+            else
+            "No identifiable individuals found.",
+
 
         "findings": findings
 
