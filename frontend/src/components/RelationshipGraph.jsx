@@ -10,45 +10,58 @@ import "reactflow/dist/style.css";
 
 
 
-function PersonNode({ data }) {
+function PersonNode({data}) {
 
 
   return (
 
-    <div className="bg-gray-800 border border-blue-500 rounded-xl px-5 py-3 shadow-lg">
+    <div className="bg-zinc-900 border border-blue-500 rounded-xl px-5 py-3 shadow-lg">
 
 
       <Handle
+
         type="target"
+
         position={Position.Left}
+
       />
 
 
-      <div className="flex items-center gap-2">
 
-        <span>
-          👤
-        </span>
+      <div>
 
 
-        <span className="font-semibold text-white">
+        <p className="text-xs text-blue-400">
+
+          ENTITY
+
+        </p>
+
+
+
+        <p className="text-sm font-medium text-white mt-1">
 
           {data.label}
 
-        </span>
+        </p>
 
 
       </div>
 
 
 
+
       <Handle
+
         type="source"
+
         position={Position.Right}
+
       />
 
 
     </div>
+
 
   );
 
@@ -59,28 +72,26 @@ function PersonNode({ data }) {
 
 
 
-function RelationshipGraph({ connections = [] }) {
+
+function RelationshipGraph({connections=[]}) {
 
 
+  const nodeTypes={
 
-  const nodeTypes = {
-
-    person: PersonNode
+    person:PersonNode
 
   };
 
 
 
 
+  const nodes=[];
 
-  const nodes = [];
-
-  const edges = [];
-
+  const edges=[];
 
 
-  const people = [];
 
+  const people=[];
 
 
 
@@ -102,10 +113,7 @@ function RelationshipGraph({ connections = [] }) {
     }
 
 
-
-
   });
-
 
 
 
@@ -117,7 +125,8 @@ function RelationshipGraph({ connections = [] }) {
 
     nodes.push({
 
-      id: person,
+
+      id:person,
 
 
       type:"person",
@@ -125,16 +134,21 @@ function RelationshipGraph({ connections = [] }) {
 
       position:{
 
-        x:index * 300,
 
-        y:150
+        x:index*220,
+
+
+        y:120
+
 
       },
 
 
       data:{
 
+
         label:person
+
 
       }
 
@@ -143,7 +157,6 @@ function RelationshipGraph({ connections = [] }) {
 
 
   });
-
 
 
 
@@ -157,7 +170,7 @@ function RelationshipGraph({ connections = [] }) {
     edges.push({
 
 
-      id:`edge-${index}`,
+      id:`connection-${index}`,
 
 
       source:connection.source,
@@ -171,9 +184,12 @@ function RelationshipGraph({ connections = [] }) {
 
       animated:true,
 
+
       style:{
 
+
         strokeWidth:2
+
 
       }
 
@@ -191,17 +207,17 @@ function RelationshipGraph({ connections = [] }) {
 
 
 
-
   return (
+
 
 
     <div
 
-      className="bg-gray-950 rounded-2xl border border-gray-800"
+      className="bg-zinc-950 border border-zinc-800 rounded-2xl"
 
       style={{
 
-        height:450
+        height:420
 
       }}
 
@@ -209,64 +225,71 @@ function RelationshipGraph({ connections = [] }) {
 
 
 
-      {
 
+    {
 
-        connections.length > 0 ? (
-
-
-          <ReactFlow
-
-            nodes={nodes}
-
-            edges={edges}
-
-            nodeTypes={nodeTypes}
-
-            fitView
-
-          >
-
-
-            <Background/>
-
-
-            <Controls/>
-
-
-          </ReactFlow>
+      connections.length > 0 ? (
 
 
 
-        ) : (
+        <ReactFlow
+
+
+          nodes={nodes}
+
+
+          edges={edges}
+
+
+          nodeTypes={nodeTypes}
+
+
+          fitView
 
 
 
-          <div className="h-full flex items-center justify-center text-gray-400">
+        >
 
 
-            No relationship data available
+          <Background/>
 
 
-          </div>
+          <Controls/>
+
+
+        </ReactFlow>
 
 
 
-        )
+      ) : (
 
 
-      }
+
+        <div className="h-full flex items-center justify-center text-gray-500 text-sm">
+
+
+          No relationship data available
+
+
+        </div>
+
+
+
+      )
+
+
+    }
 
 
 
     </div>
 
 
+
   );
 
 
 }
-
 
 
 export default RelationshipGraph;

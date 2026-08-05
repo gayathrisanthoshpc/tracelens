@@ -1,80 +1,170 @@
-import { useEffect, useState } from "react";
+import { useEffect,useState } from "react";
 import axios from "axios";
 import CaseCard from "../components/CaseCard";
 
 
-function Dashboard() {
-
-  const [cases, setCases] = useState([]);
+function Dashboard(){
 
 
-  useEffect(() => {
-
-    axios
-      .get("http://127.0.0.1:8000/cases")
-      .then((response) => {
-
-        setCases(response.data.cases);
-
-      })
-      .catch((error) => {
-
-        console.log(error);
-
-      });
-
-
-  }, []);
+const [cases,setCases]=useState([]);
 
 
 
-  return (
-
-    <div className="min-h-screen bg-gray-950 text-white p-8">
+useEffect(()=>{
 
 
-      <header className="mb-10">
+axios
+.get("http://127.0.0.1:8000/cases")
+.then((res)=>{
 
-        <h1 className="text-4xl font-bold">
-          TraceLens
-        </h1>
+setCases(res.data.cases || []);
+
+});
 
 
-        <p className="text-gray-400 mt-2">
-          AI Investigation Dashboard
-        </p>
-
-      </header>
+},[]);
 
 
 
-      <h2 className="text-2xl font-semibold mb-5">
-        Recent Cases
-      </h2>
+
+return (
+
+<div className="space-y-8">
+
+
+<h1 className="
+text-3xl
+font-bold
+">
+
+Investigation Dashboard
+
+</h1>
+
+
+<p className="
+text-gray-400
+">
+
+Monitor digital evidence analysis and active cases
+
+</p>
 
 
 
-      <div className="grid md:grid-cols-3 gap-6">
+
+<div className="
+grid
+md:grid-cols-3
+gap-5
+">
 
 
-        {
-          cases.map((caseId)=>(
+<div className="
+bg-[#0b1220]
+border
+border-gray-800
+rounded-xl
+p-5
+">
 
-            <CaseCard
-              key={caseId}
-              caseId={caseId}
-            />
+<p className="text-gray-400">
+Total Cases
+</p>
 
-          ))
-        }
+<p className="text-3xl mt-2 font-bold">
+{cases.length}
+</p>
+
+</div>
 
 
-      </div>
 
 
-    </div>
+<div className="
+bg-[#0b1220]
+border
+border-gray-800
+rounded-xl
+p-5
+">
 
-  );
+<p className="text-gray-400">
+System Status
+</p>
+
+<p className="text-green-400 mt-2">
+● Online
+</p>
+
+</div>
+
+
+
+
+<div className="
+bg-[#0b1220]
+border
+border-gray-800
+rounded-xl
+p-5
+">
+
+<p className="text-gray-400">
+AI Engine
+</p>
+
+<p className="text-blue-400 mt-2">
+Ready
+</p>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<h2 className="text-xl font-semibold">
+
+Recent Investigations
+
+</h2>
+
+
+
+<div className="
+grid
+md:grid-cols-3
+gap-5
+">
+
+
+{
+
+cases.map((id)=>(
+
+<CaseCard
+key={id}
+caseId={id}
+/>
+
+))
+
+}
+
+
+
+</div>
+
+
+</div>
+
+);
+
 
 }
 

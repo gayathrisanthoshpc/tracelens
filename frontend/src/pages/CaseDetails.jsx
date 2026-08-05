@@ -9,27 +9,21 @@ import ReportCard from "../components/ReportCard";
 
 function CaseDetails() {
 
-
   const { caseId } = useParams();
 
   const [data, setData] = useState(null);
 
 
 
-
   useEffect(() => {
 
-
     axios
-
       .get(`http://127.0.0.1:8000/cases/${caseId}`)
-
       .then((response)=>{
 
         setData(response.data);
 
       })
-
       .catch((error)=>{
 
         console.log(error);
@@ -43,15 +37,17 @@ function CaseDetails() {
 
 
 
-
   if (!data) {
-
 
     return (
 
       <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
 
-        Loading investigation...
+        <p className="text-gray-400">
+
+          Loading investigation...
+
+        </p>
 
       </div>
 
@@ -63,38 +59,40 @@ function CaseDetails() {
 
 
 
+  const events = data.events || data.timeline || [];
+
+
+
 
 
   return (
 
 
-    <div className="min-h-screen bg-gray-950 text-white p-8">
-
+    <div className="min-h-screen bg-gray-950 text-white p-6">
 
 
       <div className="max-w-7xl mx-auto">
 
 
 
-
-
         {/* Header */}
 
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-8">
 
 
           <div>
 
-            <h1 className="text-4xl font-bold">
 
-              TraceLens AI
+            <h1 className="text-2xl font-semibold">
+
+              TraceLens Investigation
 
             </h1>
 
 
-            <p className="text-gray-400 mt-2">
+            <p className="text-sm text-gray-400 mt-1">
 
-              Case Investigation: {data.case_id}
+              Case ID: {data.case_id}
 
             </p>
 
@@ -104,16 +102,15 @@ function CaseDetails() {
 
 
 
-          <div className="bg-green-900/30 border border-green-700 px-5 py-3 rounded-xl">
+          <div className="bg-green-500/10 border border-green-500/30 px-4 py-2 rounded-lg">
 
-            <span className="text-green-400">
+            <span className="text-green-400 text-sm">
 
-              ● Investigation Complete
+              ● Analysis Complete
 
             </span>
 
           </div>
-
 
 
         </div>
@@ -124,17 +121,17 @@ function CaseDetails() {
 
 
 
-
         {/* Stats */}
 
-        <div className="grid md:grid-cols-4 gap-5 mt-10">
+
+        <div className="grid md:grid-cols-4 gap-4">
 
 
           <StatCard
 
             title="Entities"
 
-            value={data.people.length}
+            value={data.people?.length || 0}
 
           />
 
@@ -143,7 +140,7 @@ function CaseDetails() {
 
             title="Events"
 
-            value={data.events.length}
+            value={events.length}
 
           />
 
@@ -161,7 +158,7 @@ function CaseDetails() {
 
             title="Confidence"
 
-            value={`${data.report.confidence}%`}
+            value={`${data.report?.confidence || 0}%`}
 
           />
 
@@ -175,20 +172,20 @@ function CaseDetails() {
 
 
 
-
-        {/* Agents */}
-
-        <section className="mt-12">
+        {/* Agent Pipeline */}
 
 
-          <h2 className="text-2xl font-bold mb-5">
+        <section className="mt-10">
 
-            AI Agent Pipeline
+
+          <h2 className="text-lg font-medium mb-4">
+
+            Agent Execution Pipeline
 
           </h2>
 
 
-          <AgentStatus />
+          <AgentStatus/>
 
 
         </section>
@@ -200,10 +197,16 @@ function CaseDetails() {
 
 
 
-
         {/* Report */}
 
-        <ReportCard report={data.report}/>
+
+        <section className="mt-10">
+
+
+          <ReportCard report={data.report}/>
+
+
+        </section>
 
 
 
@@ -212,36 +215,41 @@ function CaseDetails() {
 
 
 
-
-        {/* People */}
-
-        <section className="mt-12">
+        {/* Entities */}
 
 
-          <h2 className="text-2xl font-bold">
+        <section className="mt-10">
+
+
+          <h2 className="text-lg font-medium mb-4">
 
             Identified Entities
 
           </h2>
 
 
-          <div className="flex gap-4 mt-5">
+
+          <div className="flex flex-wrap gap-3">
 
 
             {
 
-              data.people.map((person)=>(
+              data.people?.map((person)=>(
 
 
                 <div
 
-                key={person}
+                  key={person}
 
-                className="bg-gray-900 border border-gray-800 px-6 py-4 rounded-xl"
+                  className="bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-lg hover:border-blue-500 transition"
 
                 >
 
-                  👤 {person}
+                  <span>
+
+                    👤 {person}
+
+                  </span>
 
 
                 </div>
@@ -264,57 +272,59 @@ function CaseDetails() {
 
 
 
-
         {/* Timeline */}
 
-        <section className="mt-12">
+
+        <section className="mt-10">
 
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-lg font-medium mb-4">
 
-            Event Timeline
+            Evidence Timeline
 
           </h2>
 
 
 
-          <div className="mt-5 space-y-4">
+
+          <div className="space-y-3">
 
 
-          {
+            {
 
-            data.events.map((event,index)=>(
-
-
-              <div
-
-              key={index}
-
-              className="bg-gray-900 border border-gray-800 p-5 rounded-xl"
-
-              >
+              events.map((event,index)=>(
 
 
-                <p className="text-blue-400 font-bold">
+                <div
 
-                  {event.time}
+                  key={index}
 
-                </p>
+                  className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 hover:border-blue-500 transition"
 
-
-                <p className="mt-2">
-
-                  {event.event}
-
-                </p>
+                >
 
 
-              </div>
+                  <p className="text-blue-400 text-sm font-medium">
+
+                    {event.time}
+
+                  </p>
 
 
-            ))
 
-          }
+                  <p className="text-gray-300 mt-1">
+
+                    {event.event}
+
+                  </p>
+
+
+                </div>
+
+
+              ))
+
+            }
 
 
           </div>
@@ -329,20 +339,25 @@ function CaseDetails() {
 
 
 
-
-        {/* Graph */}
-
-        <section className="mt-12">
+        {/* Network */}
 
 
-          <h2 className="text-2xl font-bold mb-5">
+        <section className="mt-10">
+
+
+          <h2 className="text-lg font-medium mb-4">
 
             Relationship Network
 
           </h2>
 
 
-          <RelationshipGraph connections={data.connections}/>
+
+          <RelationshipGraph
+
+            connections={data.connections || []}
+
+          />
 
 
         </section>
@@ -359,7 +374,6 @@ function CaseDetails() {
 
   );
 
-
 }
 
 
@@ -372,17 +386,17 @@ function StatCard({title,value}){
 
   return (
 
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-blue-500 transition">
 
 
-      <p className="text-gray-400">
+      <p className="text-gray-400 text-sm">
 
         {title}
 
       </p>
 
 
-      <p className="text-3xl font-bold mt-2">
+      <p className="text-2xl font-semibold mt-2">
 
         {value}
 
@@ -391,11 +405,10 @@ function StatCard({title,value}){
 
     </div>
 
+
   );
 
-
 }
-
 
 
 

@@ -8,57 +8,64 @@ function AgentStatus() {
 
     {
       name: "Evidence Agent",
-      processing: "Analyzing evidence...",
-      status: "Evidence collected successfully"
+      role: "Evidence ingestion and analysis",
+      processing: "Reading uploaded evidence...",
+      completed: "Evidence processed"
     },
 
     {
       name: "Entity Agent",
-      processing: "Extracting people and entities...",
-      status: "People and entities extracted"
+      role: "Person and entity extraction",
+      processing: "Identifying entities...",
+      completed: "Entities extracted"
     },
 
     {
       name: "Timeline Agent",
-      processing: "Reconstructing events...",
-      status: "Events reconstructed successfully"
+      role: "Event reconstruction",
+      processing: "Building evidence timeline...",
+      completed: "Timeline generated"
     },
 
     {
       name: "Report Agent",
-      processing: "Generating investigation report...",
-      status: "Investigation report generated"
+      role: "Investigation intelligence report",
+      processing: "Preparing final report...",
+      completed: "Report generated"
     }
 
   ];
 
 
 
-  const [activeAgent, setActiveAgent] = useState(0);
 
-  const [completedAll, setCompletedAll] = useState(false);
+  const [activeAgent,setActiveAgent] = useState(0);
 
-
-
-  useEffect(() => {
+  const [finished,setFinished] = useState(false);
 
 
-    const timer = setInterval(() => {
 
 
-      setActiveAgent((current) => {
+
+  useEffect(()=>{
 
 
-        if (current < agents.length - 1) {
+    const timer=setInterval(()=>{
 
-          return current + 1;
+
+      setActiveAgent((current)=>{
+
+
+        if(current < agents.length-1){
+
+          return current+1;
 
         }
 
 
         clearInterval(timer);
 
-        setCompletedAll(true);
+        setFinished(true);
 
         return current;
 
@@ -66,14 +73,15 @@ function AgentStatus() {
       });
 
 
-    }, 2000);
+    },1800);
 
 
 
-    return () => clearInterval(timer);
+    return ()=>clearInterval(timer);
 
 
-  }, []);
+  },[]);
+
 
 
 
@@ -82,89 +90,159 @@ function AgentStatus() {
 
   return (
 
-    <div className="space-y-4">
+
+    <div className="space-y-3">
 
 
       {
 
-        agents.map((agent, index) => {
+        agents.map((agent,index)=>{
 
 
-          const isCompleted =
+          const completed =
+
             index < activeAgent ||
-            (completedAll && index === agents.length - 1);
+
+            (finished && index === agents.length-1);
 
 
-          const isActive =
-            index === activeAgent && !completedAll;
+
+          const active =
+
+            index === activeAgent && !finished;
+
 
 
 
           return (
 
+
             <div
 
               key={agent.name}
 
-              className={`p-5 rounded-xl border transition-all duration-500
+              className={`border rounded-xl p-4 transition
+
 
               ${
-                isActive
-                  ? "bg-gray-800 border-blue-500 shadow-lg"
-                  : "bg-gray-900 border-gray-800"
+                active
+
+                ? "border-blue-500 bg-blue-500/10"
+
+                : completed
+
+                ? "border-green-500/30 bg-green-500/5"
+
+                : "border-zinc-800 bg-zinc-900"
+
               }
 
+
               `}
+
 
             >
 
 
 
-              <div className="flex items-center gap-3">
+
+              <div className="flex items-center justify-between">
 
 
-                <span
+                <div className="flex items-center gap-3">
 
-                  className={`text-xl
 
-                  ${
-                    isCompleted
-                      ? "text-green-400"
-                      : isActive
-                      ? "text-blue-400 animate-spin"
-                      : "text-gray-500"
-                  }
+                  <div
 
-                  `}
+                    className={`h-8 w-8 rounded-full flex items-center justify-center text-sm
 
-                >
+
+                    ${
+                      completed
+
+                      ? "bg-green-500/20 text-green-400"
+
+                      : active
+
+                      ? "bg-blue-500/20 text-blue-400"
+
+                      : "bg-zinc-800 text-gray-500"
+
+                    }
+
+
+                    `}
+
+                  >
+
+
+                    {
+
+                      completed
+
+                      ? "✓"
+
+                      : active
+
+                      ? "•"
+
+                      : "○"
+
+                    }
+
+
+                  </div>
+
+
+
+
+                  <div>
+
+
+                    <h3 className="text-sm font-medium">
+
+                      {agent.name}
+
+                    </h3>
+
+
+
+                    <p className="text-xs text-gray-500">
+
+                      {agent.role}
+
+                    </p>
+
+
+                  </div>
+
+
+
+                </div>
+
+
+
+
+
+                <span className="text-xs text-gray-400">
+
 
                   {
 
-                    isCompleted
+                    completed
 
-                    ? "✓"
+                    ? "Completed"
 
-                    : isActive
+                    : active
 
-                    ? "⟳"
+                    ? "Running"
 
-                    : "○"
+                    : "Waiting"
 
                   }
 
 
                 </span>
-
-
-
-
-
-                <h3 className="text-lg font-semibold">
-
-                  {agent.name}
-
-                </h3>
 
 
 
@@ -174,26 +252,25 @@ function AgentStatus() {
 
 
 
-              <p className="text-gray-400 mt-2 ml-8">
+              <p className="text-sm text-gray-400 mt-3 ml-11">
 
 
                 {
 
-                  isCompleted
+                  completed
 
-                  ? agent.status
+                  ? agent.completed
 
-                  : isActive
+                  : active
 
                   ? agent.processing
 
-                  : "Waiting..."
+                  : "Awaiting previous agent"
 
                 }
 
 
               </p>
-
 
 
 
@@ -205,15 +282,17 @@ function AgentStatus() {
 
         })
 
+
       }
 
 
     </div>
 
+
   );
 
-}
 
+}
 
 
 export default AgentStatus;

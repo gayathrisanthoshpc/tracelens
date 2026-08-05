@@ -1,14 +1,10 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Layout from "./components/Layout";
 
-import UploadEvidence from "./components/UploadEvidence";
-
+import Dashboard from "./pages/Dashboard";
+import UploadEvidence from "./pages/UploadEvidence";
 import CaseDetails from "./pages/CaseDetails";
-
 
 
 function App() {
@@ -22,23 +18,28 @@ function App() {
       <Routes>
 
 
-        <Route
-
-          path="/"
-
-          element={<UploadEvidence />}
-
-        />
+        <Route path="/" element={<Layout/>}>
 
 
+          <Route 
+            index 
+            element={<Dashboard/>} 
+          />
 
-        <Route
 
-          path="/case/:caseId"
+          <Route
+            path="upload"
+            element={<UploadEvidence/>}
+          />
 
-          element={<CaseDetails />}
 
-        />
+          <Route
+            path="case/:caseId"
+            element={<CaseDetails/>}
+          />
+
+
+        </Route>
 
 
       </Routes>
@@ -48,8 +49,8 @@ function App() {
 
   );
 
-}
 
+}
 
 
 export default App;

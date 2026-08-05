@@ -1,1 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,
+body,
+#root{
+  width:100%;
+  min-height:100%;
+}
+
+body{
+  font-family:"Inter",sans-serif;
+  background:#050816;
+  color:white;
+  overflow-x:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+::-webkit-scrollbar{
+  width:8px;
+}
+
+::-webkit-scrollbar-track{
+  background:#0f172a;
+}
+
+::-webkit-scrollbar-thumb{
+  background:#2563eb;
+  border-radius:999px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background:#3b82f6;
+}

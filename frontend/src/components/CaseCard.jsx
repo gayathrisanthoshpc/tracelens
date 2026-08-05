@@ -1,31 +1,61 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
-function CaseCard({ caseId }) {
-
-  const navigate = useNavigate();
+function CaseCard({caseId}){
 
 
-  return (
+return (
 
-    <div
-      onClick={() => navigate(`/case/${caseId}`)}
-      className="bg-gray-900 p-6 rounded-xl border border-gray-800 cursor-pointer hover:border-blue-500"
-    >
-
-      <h3 className="text-xl font-bold">
-        {caseId}
-      </h3>
-
-
-      <p className="text-gray-400 mt-2">
-        Investigation Case
-      </p>
+<div className="
+bg-[#0b1220]
+border
+border-gray-800
+rounded-2xl
+p-6
+hover:border-blue-500
+transition
+">
 
 
-    </div>
+<h3 className="text-xl font-bold">
 
-  );
+{caseId}
+
+</h3>
+
+
+<p className="text-gray-400 mt-2">
+Digital evidence analysis
+</p>
+
+
+
+<Link
+
+to={`/case/${caseId}`}
+
+className="
+inline-block
+mt-5
+bg-blue-600
+px-5
+py-2
+rounded-lg
+hover:bg-blue-700
+"
+
+>
+
+View Investigation
+
+</Link>
+
+
+</div>
+
+);
+
+
 }
 
 
