@@ -1,6 +1,75 @@
 print("REPORT AGENT LOADED")
 
 
+def calculate_risk(event_text):
+    """
+    Calculate case risk based on evidence keywords
+    """
+
+    high_risk_words = [
+        "fraud",
+        "scam",
+        "fake",
+        "illegal",
+        "threat",
+        "stolen",
+        "attack"
+    ]
+
+
+    medium_risk_words = [
+        "payment",
+        "money",
+        "transfer",
+        "document",
+        "transaction"
+    ]
+
+
+    for word in high_risk_words:
+
+        if word in event_text:
+            return "High"
+
+
+    for word in medium_risk_words:
+
+        if word in event_text:
+            return "Medium"
+
+
+    return "Low"
+
+
+
+
+
+def calculate_confidence(people, events):
+    """
+    Confidence score based on extracted information
+    """
+
+    confidence = 50
+
+
+    if people:
+        confidence += 20
+
+
+    if events:
+        confidence += 20
+
+
+    if len(events) > 3:
+        confidence += 10
+
+
+    return min(confidence, 95)
+
+
+
+
+
 
 def generate_report(case_data):
 
@@ -12,8 +81,8 @@ def generate_report(case_data):
 
 
     events = case_data.get(
-        "timeline",
-        []
+        "events",
+        case_data.get("timeline", [])
     )
 
 
@@ -25,26 +94,22 @@ def generate_report(case_data):
     event_text = " ".join(
 
         [
-
-            e.get("event","")
-
+            e.get("event", "")
             for e in events
-
-            if isinstance(e,dict)
-
+            if isinstance(e, dict)
         ]
 
     ).lower()
 
 
 
+    # Findings extraction
 
     if "contact" in event_text:
 
         findings.append(
             "Direct communication detected"
         )
-
 
 
     if "document" in event_text:
@@ -54,13 +119,18 @@ def generate_report(case_data):
         )
 
 
-
     if "payment" in event_text:
 
         findings.append(
             "Payment confirmation found"
         )
 
+
+    if "fraud" in event_text or "scam" in event_text:
+
+        findings.append(
+            "Potential fraudulent activity detected"
+        )
 
 
 
@@ -72,58 +142,42 @@ def generate_report(case_data):
 
 
 
-
-    risk = "Low"
-
-
-    if "payment" in event_text:
-
-        risk = "Medium"
+    risk = calculate_risk(
+        event_text
+    )
 
 
-
-    if "fraud" in event_text or "scam" in event_text:
-
-        risk = "High"
-
-
-
-
-
-    summary = (
-
-        f"{', '.join(people)} "
-
-        "were involved in the analyzed evidence."
-
+    confidence = calculate_confidence(
+        people,
+        events
     )
 
 
 
-    confidence = 80
+    if people:
 
+        summary = (
+            f"{', '.join(people)} were involved "
+            "in the analyzed evidence."
+        )
 
+    else:
 
-    if len(events) > 2:
-
-        confidence = 90
-
+        summary = (
+            "No identifiable individuals were found "
+            "in the analyzed evidence."
+        )
 
 
 
     return {
 
-
         "risk": risk,
-
 
         "confidence": confidence,
 
-
         "summary": summary,
 
-
         "findings": findings
-
 
     }

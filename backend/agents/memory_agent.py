@@ -3,6 +3,53 @@ import os
 
 
 
+def load_memory(file_path):
+
+    """
+    Load existing memory safely
+    """
+
+    if not os.path.exists(file_path):
+
+        return {
+            "cases": []
+        }
+
+
+    try:
+
+        with open(
+            file_path,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
+            data = json.load(file)
+
+
+            if "cases" not in data:
+
+                data["cases"] = []
+
+
+            return data
+
+
+    except json.JSONDecodeError:
+
+        print(
+            "Memory file corrupted. Creating new memory."
+        )
+
+        return {
+            "cases": []
+        }
+
+
+
+
+
+
 def save_memory(
 
     case_data,
@@ -26,27 +73,9 @@ def save_memory(
 
 
 
-    if os.path.exists(file_path):
-
-
-        with open(
-            file_path,
-            "r"
-        ) as file:
-
-            memory = json.load(file)
-
-
-    else:
-
-
-        memory = {
-
-            "cases":[]
-
-        }
-
-
+    memory = load_memory(
+        file_path
+    )
 
 
 
@@ -57,7 +86,7 @@ def save_memory(
     for index, case in enumerate(memory["cases"]):
 
 
-        if case["case_id"] == case_data["case_id"]:
+        if case.get("case_id") == case_data.get("case_id"):
 
 
             memory["cases"][index] = case_data
@@ -69,9 +98,7 @@ def save_memory(
 
 
 
-
     if not case_exists:
-
 
         memory["cases"].append(
             case_data
@@ -85,7 +112,9 @@ def save_memory(
 
         file_path,
 
-        "w"
+        "w",
+
+        encoding="utf-8"
 
     ) as file:
 
@@ -104,6 +133,7 @@ def save_memory(
 
 
 
+
 def get_memory(
 
     file_path="memory/case_memory.json"
@@ -111,23 +141,9 @@ def get_memory(
 ):
 
 
-    if not os.path.exists(file_path):
-
-        return []
-
-
-
-    with open(
-
-        file_path,
-
-        "r"
-
-    ) as file:
-
-
-        memory = json.load(file)
-
+    memory = load_memory(
+        file_path
+    )
 
 
     return memory.get(
