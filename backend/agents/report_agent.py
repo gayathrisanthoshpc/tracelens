@@ -1,74 +1,129 @@
+print("REPORT AGENT LOADED")
+
+
+
 def generate_report(case_data):
 
-    people = case_data.get("people", [])
-    events = case_data.get("events", [])
+
+    people = case_data.get(
+        "people",
+        []
+    )
+
+
+    events = case_data.get(
+        "timeline",
+        []
+    )
+
+
 
     findings = []
 
 
-    # Convert events into text safely
-    event_text = ""
 
-    for event in events:
+    event_text = " ".join(
 
-        if isinstance(event, dict):
+        [
 
-            event_text += (
-                event.get("event", "")
-                .lower()
-                + " "
-            )
+            e.get("event","")
 
-        else:
+            for e in events
 
-            event_text += (
-                str(event)
-                .lower()
-                + " "
-            )
+            if isinstance(e,dict)
+
+        ]
+
+    ).lower()
 
 
 
-    # Generate findings
 
     if "contact" in event_text:
+
         findings.append(
             "Direct communication detected"
         )
 
 
+
     if "document" in event_text:
+
         findings.append(
             "Document exchange observed"
         )
 
 
+
     if "payment" in event_text:
+
         findings.append(
             "Payment confirmation found"
         )
 
 
-    # Default finding if nothing detected
+
 
     if not findings:
+
         findings.append(
             "No significant activity detected"
         )
 
 
 
+
+    risk = "Low"
+
+
+    if "payment" in event_text:
+
+        risk = "Medium"
+
+
+
+    if "fraud" in event_text or "scam" in event_text:
+
+        risk = "High"
+
+
+
+
+
+    summary = (
+
+        f"{', '.join(people)} "
+
+        "were involved in the analyzed evidence."
+
+    )
+
+
+
+    confidence = 80
+
+
+
+    if len(events) > 2:
+
+        confidence = 90
+
+
+
+
     return {
 
-        "risk": "Medium",
 
-        "confidence": 85,
+        "risk": risk,
 
-        "summary": (
-            f"{', '.join(people)} were involved in "
-            "the analyzed evidence."
-        ),
+
+        "confidence": confidence,
+
+
+        "summary": summary,
+
 
         "findings": findings
+
 
     }

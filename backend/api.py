@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
+
 from fastapi.middleware.cors import CORSMiddleware
 
 import os
@@ -6,15 +7,7 @@ import shutil
 import json
 
 
-from agents.evidence_agent import (
-    read_evidence,
-    extract_people,
-    extract_timeline,
-    extract_connections
-)
-
-from agents.report_agent import generate_report
-from agents.memory_agent import save_memory
+from agents.orchestrator import run_pipeline
 
 
 
@@ -46,15 +39,14 @@ MEMORY_FILE = "memory/case_memory.json"
 
 
 
-
-
 @app.get("/")
 def home():
 
     return {
-        "message": "TraceLens API running"
-    }
 
+        "message": "TraceLens API running"
+
+    }
 
 
 
@@ -62,8 +54,11 @@ def home():
 
 @app.post("/upload/{case_id}")
 def upload_evidence(
+
     case_id: str,
+
     file: UploadFile = File(...)
+
 ):
 
     folder = f"data/{case_id}"
@@ -76,19 +71,28 @@ def upload_evidence(
 
 
     file_path = os.path.join(
+
         folder,
+
         file.filename
+
     )
 
 
     with open(
+
         file_path,
+
         "wb"
+
     ) as buffer:
 
         shutil.copyfileobj(
+
             file.file,
+
             buffer
+
         )
 
 
@@ -106,127 +110,26 @@ def upload_evidence(
 
 
 
-
-
-
-
 @app.get("/analyze/{case_id}")
 def analyze_case(case_id: str):
 
 
-    folder = f"data/{case_id}"
-
-
-
-    if not os.path.exists(folder):
-
-        return {
-
-            "error": "Case folder not found"
-
-        }
-
-
-
-    files = os.listdir(folder)
-
-
-
-    if not files:
-
-        return {
-
-            "error": "No evidence file found"
-
-        }
-
-
-
-    evidence_file = os.path.join(
-
-        folder,
-
-        files[0]
-
-    )
-
-
-
     print(
-        "Reading:",
-        evidence_file
+        "========== ANALYZE ROUTE CALLED =========="
     )
-
 
 
     try:
 
 
-        evidence = read_evidence(
-            evidence_file
+        result = run_pipeline(
+
+            case_id
+
         )
-
-
-
-        print(
-            "========== EVIDENCE =========="
-        )
-
-        print(evidence)
-
-        print(
-            "=============================="
-        )
-
-
-
-        people = extract_people(
-            evidence
-        )
-
-
-
-        events = extract_timeline(
-            evidence
-        )
-
-
-
-        connections = extract_connections(
-            events
-        )
-
-
-
-        result = {
-
-            "case_id": case_id,
-
-            "people": people,
-
-            "events": events,
-
-            "connections": connections
-
-        }
-
-
-
-        result["report"] = generate_report(
-            result
-        )
-
-
-
-        save_memory(
-            result
-        )
-
 
 
         return result
-
-
 
 
 
@@ -250,9 +153,6 @@ def analyze_case(case_id: str):
 
 
 
-
-
-
 @app.get("/cases")
 def get_cases():
 
@@ -270,8 +170,11 @@ def get_cases():
 
 
     with open(
+
         MEMORY_FILE,
+
         "r"
+
     ) as file:
 
         data = json.load(file)
@@ -285,7 +188,6 @@ def get_cases():
     else:
 
         cases = data
-
 
 
 
@@ -307,10 +209,6 @@ def get_cases():
 
 
 
-
-
-
-
 @app.get("/cases/{case_id}")
 def get_case(case_id: str):
 
@@ -326,8 +224,11 @@ def get_case(case_id: str):
 
 
     with open(
+
         MEMORY_FILE,
+
         "r"
+
     ) as file:
 
         data = json.load(file)
@@ -344,15 +245,13 @@ def get_case(case_id: str):
 
 
 
-
     for case in cases:
+
 
         if case["case_id"] == case_id:
 
-            case["report"] = generate_report(case)
 
             return case
-
 
 
 

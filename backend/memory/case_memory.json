@@ -27,7 +27,7 @@
                 "Rahul",
                 "Arjun"
             ],
-            "events": [
+            "timeline": [
                 {
                     "time": "10:30",
                     "event": "Rahul contacted Arjun."
@@ -50,7 +50,7 @@
             ],
             "report": {
                 "risk": "Medium",
-                "confidence": 85,
+                "confidence": 90,
                 "summary": "Rahul, Arjun were involved in the analyzed evidence.",
                 "findings": [
                     "Direct communication detected",

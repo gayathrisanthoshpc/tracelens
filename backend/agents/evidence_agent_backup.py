@@ -17,6 +17,7 @@ except Exception:
 
 
 def read_evidence(file_path):
+
     """
     Reads uploaded evidence file
     """
@@ -35,17 +36,18 @@ def read_evidence(file_path):
 
 
 def extract_people(text):
+
     """
-    Extract people names using spaCy + fallback
+    Extract people names using NLP
     """
 
     people = []
 
 
-    # spaCy Named Entity Recognition
     if nlp:
 
         doc = nlp(text)
+
 
         for ent in doc.ents:
 
@@ -56,34 +58,19 @@ def extract_people(text):
                 )
 
 
-    # Fallback extraction
-    # Detect capitalized names missed by spaCy
+    # fallback if spaCy finds nothing
 
-    words = text.replace(".", "").split()
+    if not people:
 
+        words = text.split()
 
-    ignored_words = [
-        "The",
-        "At",
-        "Payment",
-        "Document",
-        "Confirmed",
-        "Sent",
-        "Contacted"
-    ]
+        for word in words:
 
+            if word.istitle():
 
-    for word in words:
-
-        if (
-            word.istitle()
-            and len(word) > 2
-            and word not in ignored_words
-            and word not in people
-        ):
-
-            people.append(word)
-
+                people.append(
+                    word.strip(".")
+                )
 
 
     return list(set(people))
@@ -92,13 +79,10 @@ def extract_people(text):
 
 
 
-
 def extract_timeline(text):
+
     """
     Extract events with time
-
-    Example:
-    10:30 Rahul contacted Arjun.
     """
 
     events = []
@@ -147,8 +131,8 @@ def extract_timeline(text):
 
 
 
-
 def extract_connections(events):
+
     """
     Extract relationships between people
     """
@@ -160,7 +144,9 @@ def extract_connections(events):
 
 
         people = extract_people(
+
             event["event"]
+
         )
 
 
