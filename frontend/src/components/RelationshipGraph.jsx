@@ -12,55 +12,75 @@ import "reactflow/dist/style.css";
 
 
 
-function PersonNode({data}){
+function PersonNode({ data }) {
 
 
 return (
 
 <div
-
 className="
-w-44
+w-52
 bg-[#0b1120]
 border
-border-blue-500/50
+border-blue-500/40
 rounded-2xl
-p-4
-shadow-lg
+p-5
+shadow-xl
 "
-
 >
 
 
 <Handle
-
 type="target"
-
 position={Position.Left}
-
 className="!bg-blue-400"
-
 />
 
 
 
+<div className="
+flex
+items-center
+gap-3
+">
+
+
+<div className="
+h-10
+w-10
+rounded-full
+bg-blue-500/20
+text-blue-400
+flex
+items-center
+justify-center
+font-bold
+">
+
+{data.label?.[0]}
+
+</div>
+
+
+
+<div>
+
 <p className="
 text-[10px]
+uppercase
 tracking-widest
 text-blue-400
 font-semibold
 ">
 
-ENTITY
+Entity
 
 </p>
-
 
 
 <h3 className="
 text-lg
 font-bold
-mt-2
 text-white
 ">
 
@@ -69,14 +89,21 @@ text-white
 </h3>
 
 
+</div>
+
+
+</div>
+
+
+
 
 <p className="
 text-xs
 text-gray-400
-mt-1
+mt-4
 ">
 
-Person
+👤 Person Entity
 
 </p>
 
@@ -93,7 +120,6 @@ className="!bg-blue-400"
 />
 
 
-
 </div>
 
 );
@@ -105,9 +131,10 @@ className="!bg-blue-400"
 
 
 
-const nodeTypes={
 
-person:PersonNode
+const nodeTypes = {
+
+person: PersonNode
 
 };
 
@@ -116,9 +143,12 @@ person:PersonNode
 
 
 
+
+
+
 function RelationshipGraph({
 connections=[]
-}){
+}) {
 
 
 
@@ -139,8 +169,10 @@ if(!people.includes(item.source))
 people.push(item.source);
 
 
+
 if(!people.includes(item.target))
 people.push(item.target);
+
 
 
 });
@@ -148,7 +180,12 @@ people.push(item.target);
 
 
 
-const nodes=people.map((person,index)=>({
+
+
+const nodes=people.map((person,index)=>(
+
+
+{
 
 
 id:person,
@@ -157,24 +194,34 @@ id:person,
 type:"person",
 
 
+
 position:{
 
 
-x:index===0 ? 80 : 420,
+x:index * 350,
 
-y:160
+
+y:index % 2 === 0 ? 100 : 300
+
 
 },
 
 
+
 data:{
 
+
 label:person
+
 
 }
 
 
-}));
+
+}
+
+
+));
 
 
 
@@ -182,14 +229,17 @@ label:person
 
 
 
-const edges=connections.map((item,index)=>({
+
+
+const edges=connections.map((item,index)=>(
+
+
+{
 
 
 id:`edge-${index}`,
 
-
 source:item.source,
-
 
 target:item.target,
 
@@ -200,59 +250,88 @@ label:item.relation,
 animated:true,
 
 
+
 style:{
 
-stroke:"#3b82f6",
+
+stroke:"#60a5fa",
 
 strokeWidth:2
 
+
 },
+
+
+
 
 
 labelStyle:{
 
-fill:"#cbd5e1",
 
-fontSize:12,
+fill:"#e5e7eb",
+
+fontSize:13,
 
 fontWeight:600
 
+
 },
+
+
 
 
 labelBgStyle:{
 
-fill:"#101a30",
 
-color:"#fff"
+fill:"#111827",
+
+
+fillOpacity:0.9
+
 
 },
 
 
+
+
 markerEnd:{
+
 
 type:MarkerType.ArrowClosed,
 
-color:"#3b82f6"
+
+color:"#60a5fa"
+
 
 }
 
 
-}));
+
+}
+
+
+));
+
 
 
 
 
 return {
 
+
 nodes,
 
 edges
 
+
 };
 
 
+
 },[connections]);
+
+
+
 
 
 
@@ -264,21 +343,48 @@ if(!connections.length){
 
 return (
 
-<div className="
-h-80
+
+<div
+
+className="
+h-[450px]
 rounded-2xl
 border
 border-white/10
 bg-[#0b1120]
 flex
+flex-col
 items-center
 justify-center
-text-gray-500
+text-gray-400
+gap-3
+"
+
+>
+
+
+<p className="
+text-lg
+font-medium
 ">
 
-No relationship data available
+No Relationship Data
+
+</p>
+
+
+<p className="
+text-sm
+">
+
+Entities and connections will appear here after analysis.
+
+</p>
+
+
 
 </div>
+
 
 );
 
@@ -290,13 +396,18 @@ No relationship data available
 
 
 
+
+
+
+
 return (
+
 
 <div
 
 className="
-h-[380px]
-rounded-2xl
+h-[520px]
+rounded-3xl
 overflow-hidden
 border
 border-white/10
@@ -304,6 +415,7 @@ bg-[#050816]
 "
 
 >
+
 
 
 <ReactFlow
@@ -318,14 +430,31 @@ edges={edges}
 nodeTypes={nodeTypes}
 
 
+
 fitView
+
 
 
 fitViewOptions={{
 
-padding:0.5
+padding:0.8
 
 }}
+
+
+
+
+defaultViewport={{
+
+x:0,
+
+y:0,
+
+zoom:1
+
+}}
+
+
 
 
 proOptions={{
@@ -342,7 +471,7 @@ hideAttribution:true
 
 <Background
 
-gap={24}
+gap={25}
 
 size={1}
 
@@ -350,15 +479,18 @@ size={1}
 
 
 
+
 <Controls
 
 className="
-bg-[#0b1120]
-border
-border-white/10
+!bg-[#0b1120]
+!border
+!border-white/10
+!rounded-xl
 "
 
 />
+
 
 
 
@@ -368,11 +500,13 @@ border-white/10
 
 </div>
 
+
 );
 
 
 
 }
+
 
 
 export default RelationshipGraph;
