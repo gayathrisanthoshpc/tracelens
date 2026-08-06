@@ -1,8 +1,10 @@
 import {
-LayoutDashboard,
-Upload,
-ShieldCheck
+  LayoutDashboard,
+  Upload,
+  ShieldCheck
 } from "lucide-react";
+
+import { NavLink } from "react-router-dom";
 
 
 function Sidebar(){
@@ -11,20 +13,20 @@ function Sidebar(){
 return (
 
 <aside
-
 className="
 w-64
 min-h-screen
+bg-[#050816]
 border-r
 border-white/10
-bg-[#050816]
 p-6
 flex
 flex-col
 "
-
 >
 
+
+{/* Logo */}
 
 <div className="
 flex
@@ -54,6 +56,7 @@ justify-center
 
 <h1 className="
 font-bold
+text-white
 ">
 
 TraceLens
@@ -66,7 +69,7 @@ text-xs
 text-gray-500
 ">
 
-Evidence Intelligence
+AI Evidence Intelligence
 
 </p>
 
@@ -79,23 +82,40 @@ Evidence Intelligence
 
 
 
-<nav className="
-space-y-2
-">
+<nav className="space-y-2">
 
 
-<a
+<NavLink
 
-className="
+to="/dashboard"
+
+className={({isActive})=>
+
+`
+
 flex
 items-center
 gap-3
 px-4
 py-3
 rounded-xl
-bg-blue-500/10
-text-blue-400
-"
+transition
+
+${
+isActive
+
+?
+"bg-blue-500/10 text-blue-400"
+
+:
+
+"text-gray-400 hover:bg-white/5"
+
+}
+
+`
+
+}
 
 >
 
@@ -103,22 +123,44 @@ text-blue-400
 
 Dashboard
 
-</a>
+</NavLink>
 
 
 
-<a
 
-className="
+
+
+<NavLink
+
+to="/upload"
+
+className={({isActive})=>
+
+`
+
 flex
 items-center
 gap-3
 px-4
 py-3
 rounded-xl
-text-gray-400
-hover:bg-white/5
-"
+transition
+
+${
+isActive
+
+?
+"bg-blue-500/10 text-blue-400"
+
+:
+
+"text-gray-400 hover:bg-white/5"
+
+}
+
+`
+
+}
 
 >
 
@@ -126,7 +168,7 @@ hover:bg-white/5
 
 Upload Evidence
 
-</a>
+</NavLink>
 
 
 
@@ -136,13 +178,14 @@ Upload Evidence
 
 
 
+
 <div className="
 mt-auto
+rounded-xl
 border
 border-white/10
-rounded-xl
-p-4
 bg-white/5
+p-4
 ">
 
 
@@ -174,7 +217,8 @@ Multi-agent analysis ready
 
 </aside>
 
-)
+);
+
 
 }
 

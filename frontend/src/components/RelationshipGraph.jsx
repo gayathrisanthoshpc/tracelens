@@ -5,29 +5,28 @@ import ReactFlow, {
   Controls,
   Handle,
   Position,
-  MiniMap
+  MarkerType
 } from "reactflow";
 
 import "reactflow/dist/style.css";
 
 
 
-function EntityNode({data}){
+function PersonNode({data}){
 
 
-return(
-
+return (
 
 <div
 
 className="
-w-48
+w-44
 bg-[#0b1120]
 border
 border-blue-500/50
 rounded-2xl
-p-5
-shadow-xl
+p-4
+shadow-lg
 "
 
 >
@@ -39,15 +38,17 @@ type="target"
 
 position={Position.Left}
 
+className="!bg-blue-400"
+
 />
 
 
 
 <p className="
-text-xs
-text-blue-400
+text-[10px]
 tracking-widest
-font-medium
+text-blue-400
+font-semibold
 ">
 
 ENTITY
@@ -57,9 +58,9 @@ ENTITY
 
 
 <h3 className="
-text-xl
-font-semibold
-mt-3
+text-lg
+font-bold
+mt-2
 text-white
 ">
 
@@ -72,13 +73,12 @@ text-white
 <p className="
 text-xs
 text-gray-400
-mt-2
+mt-1
 ">
 
 Person
 
 </p>
-
 
 
 
@@ -88,12 +88,13 @@ type="source"
 
 position={Position.Right}
 
+className="!bg-blue-400"
+
 />
 
 
 
 </div>
-
 
 );
 
@@ -104,19 +105,9 @@ position={Position.Right}
 
 
 
-
-
-function RelationshipGraph({
-
-connections=[]
-
-}){
-
-
-
 const nodeTypes={
 
-entity:EntityNode
+person:PersonNode
 
 };
 
@@ -125,9 +116,16 @@ entity:EntityNode
 
 
 
+function RelationshipGraph({
+connections=[]
+}){
 
-const {nodes,edges}=useMemo(()=>{
 
+
+const {
+nodes,
+edges
+}=useMemo(()=>{
 
 
 const people=[];
@@ -138,13 +136,10 @@ connections.forEach(item=>{
 
 
 if(!people.includes(item.source))
-
 people.push(item.source);
 
 
-
 if(!people.includes(item.target))
-
 people.push(item.target);
 
 
@@ -153,38 +148,30 @@ people.push(item.target);
 
 
 
-
-
-
-const generatedNodes=people.map((person,index)=>({
+const nodes=people.map((person,index)=>({
 
 
 id:person,
 
 
-type:"entity",
+type:"person",
 
 
 position:{
 
 
-x:index===0?80:420,
+x:index===0 ? 80 : 420,
 
-y:120 + (index%2)*160
-
+y:160
 
 },
 
 
-
 data:{
-
 
 label:person
 
-
 }
-
 
 
 }));
@@ -195,18 +182,17 @@ label:person
 
 
 
-
-const generatedEdges=connections.map((item,index)=>(
-
-
-{
+const edges=connections.map((item,index)=>({
 
 
 id:`edge-${index}`,
 
+
 source:item.source,
 
+
 target:item.target,
+
 
 label:item.relation,
 
@@ -216,17 +202,14 @@ animated:true,
 
 style:{
 
-
 stroke:"#3b82f6",
 
 strokeWidth:2
-
 
 },
 
 
 labelStyle:{
-
 
 fill:"#cbd5e1",
 
@@ -234,42 +217,39 @@ fontSize:12,
 
 fontWeight:600
 
-
 },
 
 
 labelBgStyle:{
 
-
 fill:"#101a30",
 
-fillOpacity:0.9
+color:"#fff"
 
+},
+
+
+markerEnd:{
+
+type:MarkerType.ArrowClosed,
+
+color:"#3b82f6"
 
 }
 
 
-
-}
-
-
-));
+}));
 
 
 
 
+return {
 
-return{
+nodes,
 
-
-nodes:generatedNodes,
-
-edges:generatedEdges
-
+edges
 
 };
-
-
 
 
 },[connections]);
@@ -279,19 +259,13 @@ edges:generatedEdges
 
 
 
-
-
-
-
 if(!connections.length){
 
 
-return(
+return (
 
-<div
-
-className="
-h-64
+<div className="
+h-80
 rounded-2xl
 border
 border-white/10
@@ -300,14 +274,11 @@ flex
 items-center
 justify-center
 text-gray-500
-"
-
->
+">
 
 No relationship data available
 
 </div>
-
 
 );
 
@@ -319,14 +290,12 @@ No relationship data available
 
 
 
-
-return(
-
+return (
 
 <div
 
 className="
-h-[420px]
+h-[380px]
 rounded-2xl
 overflow-hidden
 border
@@ -359,9 +328,9 @@ padding:0.5
 }}
 
 
-defaultEdgeOptions={{
+proOptions={{
 
-type:"smoothstep"
+hideAttribution:true
 
 }}
 
@@ -370,9 +339,12 @@ type:"smoothstep"
 >
 
 
+
 <Background
 
-gap={20}
+gap={24}
+
+size={1}
 
 />
 
@@ -390,24 +362,14 @@ border-white/10
 
 
 
-<MiniMap
-
-className="
-bg-[#0b1120]
-"
-
-/>
-
-
-
 </ReactFlow>
 
 
 
 </div>
 
-
 );
+
 
 
 }

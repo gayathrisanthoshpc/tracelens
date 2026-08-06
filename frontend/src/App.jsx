@@ -1,33 +1,51 @@
 import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate
+BrowserRouter,
+Routes,
+Route,
+Navigate
 } from "react-router-dom";
+
 
 import Layout from "./components/Layout";
 
-import CaseDetails from "./pages/CaseDetails";
+import Dashboard from "./pages/Dashboard";
 import UploadEvidence from "./pages/UploadEvidence";
+import CaseDetails from "./pages/CaseDetails";
+
 
 
 function App(){
+
 
 return (
 
 <BrowserRouter>
 
+
 <Layout>
+
 
 <Routes>
 
 
 <Route
+
 path="/"
-element={
-<Navigate to="/upload"/>
-}
+
+element={<Navigate to="/dashboard"/>}
+
 />
+
+
+
+<Route
+
+path="/dashboard"
+
+element={<Dashboard/>}
+
+/>
+
 
 
 <Route
@@ -52,11 +70,14 @@ element={<CaseDetails/>}
 
 </Routes>
 
+
 </Layout>
+
 
 </BrowserRouter>
 
-)
+);
+
 
 }
 

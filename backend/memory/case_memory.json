@@ -3,8 +3,8 @@
         {
             "case_id": "case_002",
             "people": [
-                "Arjun",
-                "Rahul"
+                "Rahul",
+                "Arjun"
             ],
             "events": [
                 {
@@ -22,22 +22,22 @@
             ],
             "connections": [
                 {
-                    "source": "Arjun",
-                    "target": "Rahul",
+                    "source": "Rahul",
+                    "target": "Arjun",
                     "relation": "Rahul contacted Arjun."
                 }
             ],
             "report": {
                 "risk": "Medium",
                 "confidence": 90,
-                "summary": "Arjun, Rahul were involved in the analyzed evidence.",
+                "summary": "Rahul, Arjun were involved in the analyzed evidence.",
                 "findings": [
                     "Direct communication detected",
                     "Document exchange observed",
                     "Payment confirmation found"
                 ]
             },
-            "created_at": "2026-08-06T08:10:39.243007"
+            "created_at": "2026-08-06T10:39:15.664307"
         }
     ]
 }
