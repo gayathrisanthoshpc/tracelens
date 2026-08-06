@@ -2,27 +2,43 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
-function UploadEvidence() {
-
-
-  const [file, setFile] = useState(null);
-
-  const [caseId] = useState("case_002");
-
-  const [loading, setLoading] = useState(false);
-
-  const [step, setStep] = useState(0);
-
-  const navigate = useNavigate();
+import {
+  UploadCloud,
+  CheckCircle2,
+  LoaderCircle
+} from "lucide-react";
 
 
 
-  const agents = [
+
+function UploadEvidence(){
+
+
+
+  const [file,setFile]=useState(null);
+
+  const [loading,setLoading]=useState(false);
+
+  const [step,setStep]=useState(0);
+
+
+  const caseId="case_002";
+
+
+  const navigate=useNavigate();
+
+
+
+
+
+  const agents=[
 
     "Evidence Agent",
+
     "Entity Extraction Agent",
+
     "Timeline Reconstruction Agent",
+
     "Report Generation Agent"
 
   ];
@@ -31,10 +47,14 @@ function UploadEvidence() {
 
 
 
-  const uploadFile = async () => {
 
 
-    if (!file) {
+
+
+  const uploadFile=async()=>{
+
+
+    if(!file){
 
       alert("Select evidence file");
 
@@ -48,8 +68,7 @@ function UploadEvidence() {
 
 
 
-    const formData = new FormData();
-
+    const formData=new FormData();
 
     formData.append(
       "file",
@@ -59,15 +78,16 @@ function UploadEvidence() {
 
 
 
-    const timer = setInterval(()=>{
+
+    const timer=setInterval(()=>{
 
 
-      setStep((current)=>{
+      setStep(current=>{
 
 
-        if(current < agents.length - 1){
+        if(current < agents.length-1){
 
-          return current + 1;
+          return current+1;
 
         }
 
@@ -85,7 +105,8 @@ function UploadEvidence() {
 
 
 
-    try {
+
+    try{
 
 
       await axios.post(
@@ -99,6 +120,7 @@ function UploadEvidence() {
 
 
 
+
       await axios.get(
 
         `http://127.0.0.1:8000/analyze/${caseId}`
@@ -107,15 +129,13 @@ function UploadEvidence() {
 
 
 
+
+
       clearInterval(timer);
 
 
+      navigate(`/case/${caseId}`);
 
-      navigate(
-
-        `/case/${caseId}`
-
-      );
 
 
 
@@ -142,7 +162,9 @@ function UploadEvidence() {
     }
 
 
+
   };
+
 
 
 
@@ -154,26 +176,69 @@ function UploadEvidence() {
   if(loading){
 
 
+
     return (
 
 
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center p-6">
+      <div className="
+        min-h-screen
+        bg-[#050816]
+        flex
+        items-center
+        justify-center
+        px-6
+      ">
 
 
-        <div className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
+        <div className="
+          max-w-xl
+          w-full
+          bg-[#0b1120]
+          border
+          border-white/10
+          rounded-3xl
+          p-8
+        ">
 
 
-          <h1 className="text-2xl font-semibold">
 
-            TraceLens Processing
+          <div className="
+            flex
+            items-center
+            gap-3
+          ">
 
-          </h1>
+
+            <LoaderCircle
+              className="
+                animate-spin
+                text-blue-400
+              "
+            />
+
+
+            <h1 className="
+              text-2xl
+              font-semibold
+            ">
+
+              Processing Evidence
+
+            </h1>
+
+
+          </div>
 
 
 
-          <p className="text-sm text-gray-400 mt-2">
 
-            AI agents are analyzing the submitted evidence
+          <p className="
+            text-gray-400
+            mt-3
+            text-sm
+          ">
+
+            TraceLens agents are reconstructing the investigation.
 
           </p>
 
@@ -181,26 +246,45 @@ function UploadEvidence() {
 
 
 
-          <div className="mt-8 space-y-3">
+
+
+          <div className="
+            mt-8
+            space-y-3
+          ">
 
 
           {
 
+
             agents.map((agent,index)=>(
+
 
 
               <div
 
                 key={agent}
 
-                className={`rounded-xl p-4 border transition
+                className={`
 
-                ${
-                  index <= step
-                  ? "border-blue-500 bg-blue-500/10"
-                  : "border-zinc-800 bg-zinc-950"
+                  rounded-xl
+                  border
+                  p-4
 
-                }
+
+                  ${
+                    index <= step
+
+                    ?
+
+                    "border-blue-500/50 bg-blue-500/10"
+
+                    :
+
+                    "border-white/10"
+
+                  }
+
 
                 `}
 
@@ -208,36 +292,47 @@ function UploadEvidence() {
 
 
 
-                <div className="flex items-center gap-3">
 
-
-                  <span>
-
-
-                  {
-
-                    index < step
-
-                    ? "✓"
-
-                    : index === step
-
-                    ? "◉"
-
-                    : "○"
-
-                  }
-
-
-                  </span>
+                <div className="
+                  flex
+                  items-center
+                  gap-3
+                ">
 
 
 
-                  <span className="text-sm">
+                {
 
-                    {agent}
+                  index < step
+
+                  ?
+
+                  <CheckCircle2
+                    size={18}
+                    className="text-green-400"
+                  />
+
+                  :
+
+                  <span className="text-blue-400">
+
+                    {index===step?"●":"○"}
 
                   </span>
+
+                }
+
+
+
+
+
+                <span className="text-sm">
+
+                  {agent}
+
+                </span>
+
+
 
 
                 </div>
@@ -249,6 +344,7 @@ function UploadEvidence() {
 
             ))
 
+
           }
 
 
@@ -256,8 +352,8 @@ function UploadEvidence() {
 
 
 
-        </div>
 
+        </div>
 
 
       </div>
@@ -274,70 +370,129 @@ function UploadEvidence() {
 
 
 
+
+
   return (
 
 
-    <div className="min-h-screen bg-gray-950 text-white p-6">
 
-
-      <div className="max-w-5xl mx-auto">
-
-
-
-        <header>
-
-
-          <h1 className="text-3xl font-semibold">
-
-            TraceLens
-
-          </h1>
+    <div className="
+      min-h-screen
+      bg-[#050816]
+      text-white
+      px-6
+      py-12
+    ">
 
 
 
-          <p className="text-sm text-gray-400 mt-2">
-
-            Digital evidence analysis and investigation platform
-
-          </p>
-
-
-        </header>
+      <div className="
+        max-w-5xl
+        mx-auto
+      ">
 
 
 
 
+        <p className="
+          text-blue-400
+          text-xs
+          uppercase
+          tracking-widest
+        ">
 
+          Evidence Submission
 
-
-        <div className="mt-10 max-w-xl bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
-
-
-          <h2 className="text-xl font-medium">
-
-            Upload Evidence
-
-          </h2>
-
-
-
-          <p className="text-sm text-gray-400 mt-2">
-
-            Submit digital evidence for AI-powered investigation.
-
-          </p>
+        </p>
 
 
 
 
+        <h1 className="
+          text-4xl
+          font-bold
+          mt-3
+        ">
+
+          Upload Evidence
+
+        </h1>
 
 
-          <div className="mt-6 border border-dashed border-zinc-700 rounded-xl p-8 text-center">
 
 
-            <p className="text-gray-300 text-sm">
+        <p className="
+          text-gray-400
+          mt-3
+        ">
 
-              Select evidence file
+          Upload digital evidence and allow AI agents to reconstruct the case.
+
+        </p>
+
+
+
+
+
+
+
+
+        <div className="
+          mt-10
+          max-w-2xl
+          bg-[#0b1120]
+          border
+          border-white/10
+          rounded-3xl
+          p-8
+        ">
+
+
+
+
+
+          <label className="
+            block
+            border-dashed
+            border
+            border-blue-500/40
+            rounded-2xl
+            bg-blue-500/5
+            p-12
+            text-center
+            cursor-pointer
+          ">
+
+
+            <UploadCloud
+              className="
+                mx-auto
+                text-blue-400
+              "
+              size={45}
+            />
+
+
+
+            <h3 className="
+              mt-5
+              font-semibold
+            ">
+
+              Upload Evidence File
+
+            </h3>
+
+
+
+
+            <p className="
+              text-sm
+              text-gray-400
+              mt-2
+            ">
+
+              Chat logs, documents or digital evidence
 
             </p>
 
@@ -347,14 +502,17 @@ function UploadEvidence() {
 
               type="file"
 
-              className="mt-4 text-sm text-gray-400"
+              className="hidden"
 
-              onChange={(e)=>setFile(e.target.files[0])}
+              onChange={(e)=>
+                setFile(e.target.files[0])
+              }
 
             />
 
 
-          </div>
+          </label>
+
 
 
 
@@ -362,31 +520,36 @@ function UploadEvidence() {
 
 
           {
+            file &&
 
-            file && (
+            <div className="
+              mt-5
+              p-4
+              rounded-xl
+              bg-blue-500/10
+              border
+              border-blue-500/30
+            ">
 
+              <p className="text-blue-400 text-sm">
 
-              <div className="mt-4 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                Selected Evidence
 
-
-                <p className="text-blue-400 text-sm">
-
-                  Evidence Selected
-
-                </p>
-
-
-                <p className="text-gray-300 text-sm mt-1">
-
-                  {file.name}
-
-                </p>
+              </p>
 
 
-              </div>
+              <p className="
+                text-sm
+                text-gray-300
+                mt-1
+              ">
+
+                {file.name}
+
+              </p>
 
 
-            )
+            </div>
 
           }
 
@@ -395,20 +558,24 @@ function UploadEvidence() {
 
 
 
-
           <button
-
 
             onClick={uploadFile}
 
-
-            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 rounded-xl py-3 text-sm font-medium transition"
-
+            className="
+              mt-6
+              w-full
+              py-3
+              rounded-xl
+              bg-blue-600
+              hover:bg-blue-700
+              transition
+              font-medium
+            "
 
           >
 
             Start Investigation
-
 
           </button>
 
@@ -428,7 +595,9 @@ function UploadEvidence() {
 
   );
 
+
 }
+
 
 
 export default UploadEvidence;

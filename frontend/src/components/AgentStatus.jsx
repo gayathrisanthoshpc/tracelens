@@ -1,295 +1,269 @@
 import { useEffect, useState } from "react";
 
 
-function AgentStatus() {
+function AgentStatus(){
 
+const agents=[
+{
+name:"Evidence Agent",
+role:"Evidence ingestion and analysis",
+done:"Evidence processed"
+},
+{
+name:"Entity Agent",
+role:"Person and entity extraction",
+done:"Entities extracted"
+},
+{
+name:"Timeline Agent",
+role:"Event reconstruction",
+done:"Timeline generated"
+},
+{
+name:"Report Agent",
+role:"Investigation intelligence report",
+done:"Report generated"
+}
+];
 
-  const agents = [
 
-    {
-      name: "Evidence Agent",
-      role: "Evidence ingestion and analysis",
-      processing: "Reading uploaded evidence...",
-      completed: "Evidence processed"
-    },
+const [active,setActive]=useState(0);
 
-    {
-      name: "Entity Agent",
-      role: "Person and entity extraction",
-      processing: "Identifying entities...",
-      completed: "Entities extracted"
-    },
 
-    {
-      name: "Timeline Agent",
-      role: "Event reconstruction",
-      processing: "Building evidence timeline...",
-      completed: "Timeline generated"
-    },
 
-    {
-      name: "Report Agent",
-      role: "Investigation intelligence report",
-      processing: "Preparing final report...",
-      completed: "Report generated"
-    }
+useEffect(()=>{
 
-  ];
+const timer=setInterval(()=>{
 
+setActive(prev=>{
 
+if(prev < agents.length){
 
+return prev+1;
 
-  const [activeAgent,setActiveAgent] = useState(0);
+}
 
-  const [finished,setFinished] = useState(false);
+clearInterval(timer);
 
+return prev;
 
+});
 
 
+},1200);
 
-  useEffect(()=>{
 
+return ()=>clearInterval(timer);
 
-    const timer=setInterval(()=>{
 
+},[]);
 
-      setActiveAgent((current)=>{
 
 
-        if(current < agents.length-1){
 
-          return current+1;
 
-        }
+return (
 
+<div className="space-y-3">
 
-        clearInterval(timer);
 
-        setFinished(true);
+{
+agents.map((agent,index)=>{
 
-        return current;
 
+const completed=index < active;
 
-      });
+const running=index === active;
 
 
-    },1800);
 
+return (
 
+<div
 
-    return ()=>clearInterval(timer);
+key={agent.name}
 
+className={`
+rounded-xl
+border
+p-4
+transition
 
-  },[]);
+${
+completed
 
+?
+"border-green-500/30 bg-green-500/5"
 
+:
 
+running
 
+?
+"border-blue-500 bg-blue-500/10"
 
+:
 
+"border-white/10 bg-white/5"
 
-  return (
+}
 
+`}
 
-    <div className="space-y-3">
+>
 
 
-      {
+<div className="flex items-center gap-4">
 
-        agents.map((agent,index)=>{
 
+<div
 
-          const completed =
+className={`
+h-9
+w-9
+rounded-full
+flex
+items-center
+justify-center
+font-bold
 
-            index < activeAgent ||
+${
+completed
 
-            (finished && index === agents.length-1);
+?
+"bg-green-500/20 text-green-400"
 
+:
 
+running
 
-          const active =
+?
+"bg-blue-500/20 text-blue-400"
 
-            index === activeAgent && !finished;
+:
 
+"bg-white/10 text-gray-500"
 
+}
 
+`}
 
-          return (
+>
 
 
-            <div
+{
+completed
 
-              key={agent.name}
+?
+"✓"
 
-              className={`border rounded-xl p-4 transition
+:
 
+running
 
-              ${
-                active
+?
+"•"
 
-                ? "border-blue-500 bg-blue-500/10"
+:
 
-                : completed
+"○"
 
-                ? "border-green-500/30 bg-green-500/5"
+}
 
-                : "border-zinc-800 bg-zinc-900"
 
-              }
+</div>
 
 
-              `}
 
+<div>
 
-            >
 
+<p className="font-medium">
 
+{agent.name}
 
+</p>
 
-              <div className="flex items-center justify-between">
 
+<p className="text-xs text-gray-400">
 
-                <div className="flex items-center gap-3">
+{agent.role}
 
+</p>
 
-                  <div
 
-                    className={`h-8 w-8 rounded-full flex items-center justify-center text-sm
+</div>
 
 
-                    ${
-                      completed
 
-                      ? "bg-green-500/20 text-green-400"
+<span className="ml-auto text-xs text-gray-400">
 
-                      : active
+{
+completed
 
-                      ? "bg-blue-500/20 text-blue-400"
+?
+"Completed"
 
-                      : "bg-zinc-800 text-gray-500"
+:
 
-                    }
+running
 
+?
+"Running"
 
-                    `}
+:
 
-                  >
+"Waiting"
 
+}
 
-                    {
+</span>
 
-                      completed
 
-                      ? "✓"
 
-                      : active
+</div>
 
-                      ? "•"
 
-                      : "○"
 
-                    }
+<p className="ml-13 mt-3 text-sm text-gray-400">
 
+{
+completed
 
-                  </div>
+?
+agent.done
 
+:
 
+running
 
+?
+"Processing..."
 
-                  <div>
+:
 
+"Waiting for previous agent"
 
-                    <h3 className="text-sm font-medium">
+}
 
-                      {agent.name}
+</p>
 
-                    </h3>
 
 
+</div>
 
-                    <p className="text-xs text-gray-500">
 
-                      {agent.role}
+)
 
-                    </p>
 
+})
 
-                  </div>
+}
 
 
+</div>
 
-                </div>
-
-
-
-
-
-                <span className="text-xs text-gray-400">
-
-
-                  {
-
-                    completed
-
-                    ? "Completed"
-
-                    : active
-
-                    ? "Running"
-
-                    : "Waiting"
-
-                  }
-
-
-                </span>
-
-
-
-              </div>
-
-
-
-
-
-              <p className="text-sm text-gray-400 mt-3 ml-11">
-
-
-                {
-
-                  completed
-
-                  ? agent.completed
-
-                  : active
-
-                  ? agent.processing
-
-                  : "Awaiting previous agent"
-
-                }
-
-
-              </p>
-
-
-
-            </div>
-
-
-          );
-
-
-        })
-
-
-      }
-
-
-    </div>
-
-
-  );
+);
 
 
 }

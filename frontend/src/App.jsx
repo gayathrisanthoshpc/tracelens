@@ -1,54 +1,62 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
 
 import Layout from "./components/Layout";
 
-import Dashboard from "./pages/Dashboard";
-import UploadEvidence from "./pages/UploadEvidence";
 import CaseDetails from "./pages/CaseDetails";
+import UploadEvidence from "./pages/UploadEvidence";
 
 
-function App() {
+function App(){
+
+return (
+
+<BrowserRouter>
+
+<Layout>
+
+<Routes>
 
 
-  return (
-
-    <BrowserRouter>
-
-
-      <Routes>
-
-
-        <Route path="/" element={<Layout/>}>
+<Route
+path="/"
+element={
+<Navigate to="/upload"/>
+}
+/>
 
 
-          <Route 
-            index 
-            element={<Dashboard/>} 
-          />
+<Route
+
+path="/upload"
+
+element={<UploadEvidence/>}
+
+/>
 
 
-          <Route
-            path="upload"
-            element={<UploadEvidence/>}
-          />
+
+<Route
+
+path="/case/:caseId"
+
+element={<CaseDetails/>}
+
+/>
 
 
-          <Route
-            path="case/:caseId"
-            element={<CaseDetails/>}
-          />
 
+</Routes>
 
-        </Route>
+</Layout>
 
+</BrowserRouter>
 
-      </Routes>
-
-
-    </BrowserRouter>
-
-  );
-
+)
 
 }
 
