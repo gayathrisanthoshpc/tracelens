@@ -1,116 +1,85 @@
+import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Upload,
-  ShieldCheck
+  Activity
 } from "lucide-react";
-
-import { NavLink } from "react-router-dom";
 
 
 function Sidebar(){
 
-
 return (
 
-<aside
-className="
+<div className="
+h-screen
 w-64
-min-h-screen
 bg-[#050816]
 border-r
 border-white/10
 p-6
 flex
 flex-col
-"
->
+">
 
 
 {/* Logo */}
 
-<div className="
-flex
-items-center
-gap-3
-mb-10
-">
-
-
-<div className="
-h-10
-w-10
-rounded-xl
-bg-blue-500/10
-text-blue-400
-flex
-items-center
-justify-center
-">
-
-<ShieldCheck size={22}/>
-
-</div>
-
-
 <div>
 
 <h1 className="
+text-xl
 font-bold
-text-white
 ">
 
 TraceLens
 
 </h1>
 
-
 <p className="
 text-xs
-text-gray-500
+text-gray-400
+mt-1
 ">
 
-AI Evidence Intelligence
+AI Digital Evidence Intelligence
 
 </p>
 
 </div>
 
 
-</div>
 
 
+{/* Navigation */}
 
-
-
-<nav className="space-y-2">
+<nav className="
+mt-10
+space-y-2
+">
 
 
 <NavLink
 
-to="/dashboard"
+to="/"
 
 className={({isActive})=>
 
 `
-
 flex
 items-center
 gap-3
 px-4
 py-3
 rounded-xl
+text-sm
 transition
 
 ${
 isActive
-
 ?
-"bg-blue-500/10 text-blue-400"
-
+"bg-blue-500/20 text-blue-400"
 :
-
 "text-gray-400 hover:bg-white/5"
-
 }
 
 `
@@ -129,7 +98,6 @@ Dashboard
 
 
 
-
 <NavLink
 
 to="/upload"
@@ -137,25 +105,21 @@ to="/upload"
 className={({isActive})=>
 
 `
-
 flex
 items-center
 gap-3
 px-4
 py-3
 rounded-xl
+text-sm
 transition
 
 ${
 isActive
-
 ?
-"bg-blue-500/10 text-blue-400"
-
+"bg-blue-500/20 text-blue-400"
 :
-
 "text-gray-400 hover:bg-white/5"
-
 }
 
 `
@@ -171,7 +135,6 @@ Upload Evidence
 </NavLink>
 
 
-
 </nav>
 
 
@@ -179,31 +142,33 @@ Upload Evidence
 
 
 
+{/* Bottom Status */}
+
 <div className="
 mt-auto
-rounded-xl
-border
-border-white/10
-bg-white/5
-p-4
+text-sm
 ">
 
-
-<p className="
+<div className="
+flex
+items-center
+gap-2
 text-green-400
-text-sm
 font-medium
 ">
 
-● System Online
+<Activity size={16}/>
 
-</p>
+System Online
+
+</div>
 
 
 <p className="
 text-xs
 text-gray-500
 mt-1
+ml-6
 ">
 
 Multi-agent analysis ready
@@ -215,7 +180,7 @@ Multi-agent analysis ready
 
 
 
-</aside>
+</div>
 
 );
 

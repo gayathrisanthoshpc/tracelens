@@ -1,39 +1,26 @@
 import Sidebar from "./Sidebar";
 
+function Layout({ children }) {
+  return (
+    <div className="flex h-screen bg-[#050816] text-white overflow-hidden">
 
-function Layout({children}){
-
-
-return (
-
-<div className="
-flex
-min-h-screen
-bg-[#050816]
-">
+      {/* Fixed Sidebar */}
+      <aside className="w-64 h-screen flex-shrink-0">
+        <Sidebar />
+      </aside>
 
 
-<Sidebar/>
+      {/* Scrollable Content */}
+      <main className="
+        flex-1
+        h-screen
+        overflow-y-auto
+      ">
+        {children}
+      </main>
 
-
-<main className="
-flex-1
-p-10
-max-w-[1400px]
-">
-
-{children}
-
-</main>
-
-
-</div>
-
-
-)
-
-
+    </div>
+  );
 }
-
 
 export default Layout;
