@@ -1,11 +1,17 @@
 import Sidebar from "./Sidebar";
 
 function Layout({ children }) {
+
   return (
-    <div className="flex h-screen bg-[#050816] text-white overflow-hidden">
+
+    <div className="flex min-h-screen bg-[#050816] text-white">
 
       {/* Fixed Sidebar */}
-      <aside className="w-64 h-screen flex-shrink-0">
+      <aside className="
+        w-64
+        h-screen
+        flex-shrink-0
+      ">
         <Sidebar />
       </aside>
 
@@ -19,8 +25,11 @@ function Layout({ children }) {
         {children}
       </main>
 
+
     </div>
+
   );
+
 }
 
 export default Layout;

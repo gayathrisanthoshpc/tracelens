@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import UploadEvidence from "./pages/UploadEvidence";
 import CaseDetails from "./pages/CaseDetails";
@@ -13,19 +14,75 @@ return (
 
 <BrowserRouter>
 
-<Layout>
-
 <Routes>
 
-<Route path="/" element={<Dashboard/>}/>
 
-<Route path="/upload" element={<UploadEvidence/>}/>
+{/* Login Page */}
 
-<Route path="/case/:caseId" element={<CaseDetails/>}/>
+<Route
+path="/"
+element={<Login/>}
+/>
 
-</Routes>
+
+
+{/* Dashboard + Sidebar Layout */}
+
+<Route
+
+path="/dashboard"
+
+element={
+
+<Layout>
+
+<Dashboard/>
 
 </Layout>
+
+}
+
+/>
+
+
+
+<Route
+
+path="/upload"
+
+element={
+
+<Layout>
+
+<UploadEvidence/>
+
+</Layout>
+
+}
+
+/>
+
+
+
+<Route
+
+path="/case/:caseId"
+
+element={
+
+<Layout>
+
+<CaseDetails/>
+
+</Layout>
+
+}
+
+/>
+
+
+
+</Routes>
 
 </BrowserRouter>
 

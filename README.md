@@ -173,7 +173,7 @@ http://localhost:5173
 
 Demo Video:
 
-https://drive.google.com/file/d/1NsIDjW7TM74Ev2oauD__grUSJ9omFcUK/view?usp=sharing
+https://drive.google.com/file/d/1CMiR_7Vt551mylnDThR57ofsRjOSJrJN/view?usp=drive_link
 
 ---
 
